@@ -1141,15 +1141,19 @@ function drawHero(){
   const COL={R:'#C2412D', d:'#9A2F20', h:'#F4B9A0'};
   x.fillStyle=FAB_CSS; x.fillRect(0,0,W,H);
   const stitch=(i,j,col)=>{ const px=ox+(i-1)*s, py=oy+(j-1)*s, m=s*0.2; x.strokeStyle=col; x.lineWidth=s*0.26; x.lineCap='round'; x.beginPath(); x.moveTo(px+m,py+m); x.lineTo(px+s-m,py+s-m); x.moveTo(px+s-m,py+m); x.lineTo(px+m,py+s-m); x.stroke(); };
+  const hash=(u,v,k)=>{ let h=Math.imul(u+1000,0x27d4eb2d)^Math.imul(v+1000,0x165667b1)^Math.imul(k+7,0x9e3779b1); h=Math.imul(h^(h>>>15),0x85ebca6b); h=Math.imul(h^(h>>>13),0xc2b2ae35); return ((h^(h>>>16))>>>0)/4294967296; };
+  const confetti=['#E9A23B','#E7C7B5','#E7C7B5'];
+  const overlays=[];
   for(let j=0;j<=ny;j++) for(let i=0;i<=nx;i++){
     const u=i-hi-1, v=j-hj-1; // position within heart grid
     const ch = (v>=0&&v<hh&&u>=0&&u<hw) ? HEART[v][u] : '.';
-    if(ch!=='.'){ stitch(i,j,COL[ch]); continue; }
-    // sparse confetti stitches, kept away from the heart
-    const near = u>=-2 && u<hw+2 && v>=-2 && v<hh+2;
-    const rnd=(n=>n-Math.floor(n))(Math.sin(u*12.9898+v*78.233)*43758.5453);
-    if(!near && rnd<0.075) stitch(i,j, rnd<0.025 ? '#E9A23B' : '#E7C7B5');
+    const rnd=hash(u,v,0), pick=confetti[Math.floor(hash(u,v,1)*confetti.length)];
+    if(ch!=='.'){
+      stitch(i,j,COL[ch]);
+      if(ch!=='d' && rnd<0.04) overlays.push([i,j,pick]);   // a few confetti stitches inside the heart; outline stays clean
+    } else if(rnd<0.10) stitch(i,j,pick);
   }
+  overlays.forEach(([i,j,col])=>stitch(i,j,col));
   x.strokeStyle='rgba(42,36,32,.08)'; x.lineWidth=1; x.beginPath();
   for(let px=ox; px<=W; px+=s){ x.moveTo(Math.round(px)+.5,0); x.lineTo(Math.round(px)+.5,H); }
   for(let py=oy; py<=H; py+=s){ x.moveTo(0,Math.round(py)+.5); x.lineTo(W,Math.round(py)+.5); }
