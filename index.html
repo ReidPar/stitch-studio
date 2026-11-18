@@ -170,13 +170,23 @@ details[open] summary::after{content:'–'}
 .modal{position:fixed;inset:0;background:rgba(42,36,32,.4);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
 .dialog{background:var(--paper);border-radius:18px;padding:22px;max-width:400px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .dialog h4{margin:0 0 8px;font-family:Fraunces,Georgia,serif;font-size:21px;font-weight:600}
-.dialog p{margin:0 0 18px;color:var(--muted);line-height:1.5}
+.dialog p{margin:0 0 18px;color:var(--muted);line-height:1.5;white-space:pre-line}
 .dialog .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .working{position:fixed;inset:0;background:rgba(243,237,226,.75);display:flex;align-items:center;justify-content:center;z-index:40;font-weight:600}
 .working span{background:var(--paper);border:1px solid var(--line);padding:12px 20px;border-radius:999px;box-shadow:0 6px 20px rgba(60,40,20,.12)}
 
+/* Account */
+.hdr-spacer{flex:1}
+.acct{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px 6px 8px;font-weight:600;font-size:14px;white-space:nowrap;flex:none}
+.acct:hover{border-color:var(--ink)}
+.acct .g{width:18px;height:18px;flex:none}
+.acct .av{width:26px;height:26px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;overflow:hidden;flex:none}
+.acct .av img{width:100%;height:100%;object-fit:cover}
+.acct.in{padding:4px 12px 4px 4px}
+.sdot{width:8px;height:8px;border-radius:50%;background:#B9B0A6;flex:none}
+.sdot.synced{background:#4E9A63}.sdot.syncing{background:#E9A23B}.sdot.error{background:#C2412D}
 /* Cropper */
 .cropper{position:fixed;inset:0;z-index:45;background:#1E1A17;color:#F3EDE2;display:flex;flex-direction:column}
 .crop-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;flex-wrap:wrap}
@@ -229,6 +239,8 @@ details[open] summary::after{content:'–'}
   .tsep{margin:0 2px}
   .progress{padding:8px 12px}
   .crop-top{padding:12px 14px}
+  .acct .lbl-long{display:none}
+  .acct{padding:6px 10px 6px 8px}
   .crop-top .seg{width:100%}
   .crop-actions{padding:12px 14px 16px}
 
@@ -244,6 +256,8 @@ details[open] summary::after{content:'–'}
   </button>
   <div class="hdr-sep" id="hdrSep" hidden></div>
   <input class="proj-name" id="projName" aria-label="Pattern name" hidden>
+  <div class="hdr-spacer"></div>
+  <button class="acct" id="acctBtn" hidden></button>
 </header>
 
 <nav class="tabs" id="tabs" hidden>
@@ -270,7 +284,7 @@ details[open] summary::after{content:'–'}
       <h2 id="libHead" hidden>Your patterns</h2>
       <div class="libgrid" id="libGrid"></div>
       <div class="lib-foot">
-        <span>Patterns and progress are saved on this device.</span>
+        <span id="libSaveNote">Patterns and progress are saved on this device.</span>
         <button class="linkbtn" id="openBackupBtn">Open a backup file</button>
       </div>
     </div>
@@ -421,7 +435,8 @@ details[open] summary::after{content:'–'}
           </div>
           <div class="card">
             <h3>Switching devices</h3>
-            <div class="note" style="margin-bottom:12px">Progress is saved on each device separately. To pick up on your phone where you left off on your laptop (or the other way around), save a backup file and open it on the other device.</div>
+            <div class="note" id="syncNote" style="margin:-4px 0 12px" hidden></div>
+            <div class="note" id="deviceNote" style="margin-bottom:12px">Progress is saved on each device separately. To pick up on your phone where you left off on your laptop (or the other way around), save a backup file and open it on the other device.</div>
             <div class="row" style="flex-wrap:wrap">
               <button class="btn ghost small" id="saveBackupBtn">Save backup file</button>
               <button class="btn ghost small" id="openBackupBtn2">Open backup file</button>
@@ -1219,11 +1234,15 @@ function saveNow(){
   let ok=store.set(P_KEY+p.id, serialize(p));
   if(!ok && p.src){ p.src=null; ok=store.set(P_KEY+p.id, serialize(p)); if(ok) toast("Storage is nearly full, so the original picture wasn't kept. Pattern and progress are saved."); }
   if(!ok){ toast("Couldn't save on this device. Try saving a backup file."); return; }
+  upsertIndex(p);
+  queuePush(p.id);
+}
+function upsertIndex(p){
   const st=stats(p), idx=(store.get(IDX_KEY)||[]).filter(e=>e.id!==p.id);
   idx.push({id:p.id, name:p.name, updated:p.updated, w:p.w, h:p.h, colors:st.colors, pct:st.pct, thumb:thumbURL(p)});
   store.set(IDX_KEY, idx);
 }
-document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') saveNow(); });
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden'){ saveNow(); flushPushes(); } });
 window.addEventListener('pagehide', saveNow);
 
 /* ---------- library ---------- */
@@ -1240,7 +1259,7 @@ function renderLibrary(){
     card.querySelector('.pname').onclick=()=>openProject(e.id);
     card.querySelector('.icon-btn').onclick=async()=>{
       const v=await dialog('Delete this pattern?', `"${e.name}" and its stitch progress will be removed from this device.`, [{label:'Cancel',value:false},{label:'Delete',value:true,primary:true}]);
-      if(!v) return; store.del(P_KEY+e.id); store.set(IDX_KEY,(store.get(IDX_KEY)||[]).filter(x=>x.id!==e.id)); renderLibrary();
+      if(!v) return; store.del(P_KEY+e.id); store.set(IDX_KEY,(store.get(IDX_KEY)||[]).filter(x=>x.id!==e.id)); cloudDelete(e.id); renderLibrary();
     };
     grid.appendChild(card);
   });
@@ -1593,6 +1612,136 @@ async function openBackup(file){
   }catch(e){ toast("That file doesn't look like a pattern backup."); }
 }
 
+/* ---------- cloud sync (optional): Sign in with Google via Firebase ---------- */
+// To turn on syncing, paste your Firebase web app config here, e.g.
+// const FIREBASE_CONFIG = { apiKey:"...", authDomain:"....firebaseapp.com", projectId:"...", appId:"..." };
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCTf6WRGo3EzRlqgAAA_IrEPA09A3qZRIc",
+  authDomain: "stitch-studio-7939a.firebaseapp.com",
+  projectId: "stitch-studio-7939a",
+  storageBucket: "stitch-studio-7939a.firebasestorage.app",
+  messagingSenderId: "156466614366",
+  appId: "1:156466614366:web:b36cea436ab6542ccb64cf"
+};
+const FB_VER = '10.12.2';
+const cloud = { ready:false, user:null, col:null, unsub:null, status:'off', pushT:{} };
+function loadScript(src){ return new Promise((res,rej)=>{ const el=document.createElement('script'); el.src=src; el.onload=res; el.onerror=()=>rej(new Error('load '+src)); document.head.appendChild(el); }); }
+async function loadAny(urls){ for(const u of urls){ try{ await loadScript(u); return; }catch(e){} } throw new Error('Could not load '+urls[0]); }
+async function initCloud(){
+  if(!FIREBASE_CONFIG) return;
+  try{ if(window.top!==window.self) return; }catch(e){ return; }   // not inside embedded previews
+  try{
+    for(const m of ['app','auth','firestore']) await loadAny([`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-${m}-compat.js`, `https://cdn.jsdelivr.net/npm/firebase@${FB_VER}/firebase-${m}-compat.js`]);
+    firebase.initializeApp(FIREBASE_CONFIG);
+  }catch(e){ console.warn('Sync unavailable:', e); return; }
+  cloud.ready=true; renderAcct();
+  firebase.auth().getRedirectResult().catch(e=>signInError(e));
+  firebase.auth().onAuthStateChanged(u=>{ cloud.user=u; if(u) startSync(); else stopSync(); renderAcct(); });
+  window.addEventListener('online',()=>setCloudStatus(cloud.user?'synced':'off'));
+  window.addEventListener('offline',()=>setCloudStatus('offline'));
+}
+function setCloudStatus(st){ cloud.status=st; const d=$('#acctBtn .sdot'); if(d){ d.className='sdot '+st; } const b=$('#acctBtn'); if(b && cloud.user) b.title={synced:'Synced',syncing:'Syncing…',error:"Couldn't sync",offline:'Offline: will sync when back online'}[st]||''; }
+const G_ICON='<svg class="g" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+function renderAcct(){
+  const b=$('#acctBtn'); if(!cloud.ready){ b.hidden=true; return; }
+  b.hidden=false; const u=cloud.user;
+  if(!u){
+    b.className='acct'; b.innerHTML=`${G_ICON}<span>Sign in<span class="lbl-long"> to sync</span></span>`; b.title='Sign in with Google to sync patterns across your devices';
+    $('#libSaveNote').textContent='Patterns and progress are saved on this device. Sign in to sync them across your devices.';
+    $('#syncNote').hidden=true;
+  } else {
+    const name=u.displayName||u.email||'You', first=name.split(' ')[0];
+    b.className='acct in'; b.innerHTML=`<span class="av">${u.photoURL?'':escapeHtml(first.charAt(0).toUpperCase())}</span><span class="sdot ${cloud.status}"></span><span class="lbl-long">${escapeHtml(first)}</span>`;
+    if(u.photoURL){ const img=document.createElement('img'); img.alt=''; img.referrerPolicy='no-referrer'; img.src=u.photoURL; img.onerror=()=>{ img.remove(); b.querySelector('.av').textContent=first.charAt(0).toUpperCase(); }; b.querySelector('.av').appendChild(img); }
+    $('#libSaveNote').textContent=`Signed in as ${name}. Your patterns and progress sync across your devices.`;
+    $('#syncNote').hidden=false; $('#syncNote').innerHTML="<b>You're signed in</b>, so progress syncs automatically between devices. Backup files still work too.";
+    setCloudStatus(cloud.status);
+  }
+}
+async function signIn(){
+  const prov=new firebase.auth.GoogleAuthProvider(); prov.setCustomParameters({prompt:'select_account'});
+  try{ await firebase.auth().signInWithPopup(prov); }
+  catch(e){
+    if(e && (e.code==='auth/popup-blocked' || e.code==='auth/operation-not-supported-in-this-environment')){ try{ await firebase.auth().signInWithRedirect(prov); }catch(e2){ signInError(e2); } }
+    else signInError(e);
+  }
+}
+function signInError(e){
+  if(!e || !e.code || ['auth/popup-closed-by-user','auth/cancelled-popup-request','auth/user-cancelled'].includes(e.code)) return;
+  if(e.code==='auth/unauthorized-domain') toast("This site's address isn't on Firebase's list of authorized domains yet.");
+  else if(e.code==='auth/network-request-failed') toast('No connection. Try signing in again when you are online.');
+  else toast("Couldn't sign in. Please try again.");
+  console.warn(e);
+}
+async function acctClick(){
+  if(!cloud.user){ signIn(); return; }
+  const u=cloud.user, st={synced:'Everything is synced.',syncing:'Syncing now…',error:"The last sync didn't go through. It will try again.",offline:"You're offline. Changes will sync when you're back online."}[cloud.status]||'';
+  const v=await dialog(`Signed in as ${u.displayName||u.email}`, `${u.email||''}\n\nYour patterns and stitch progress sync automatically on every device where you sign in. ${st}`, [{label:'Sign out',value:'out'},{label:'Close',value:null,primary:true}]);
+  if(v==='out'){ flushPushes(); await firebase.auth().signOut(); toast('Signed out. Your patterns stay on this device.'); }
+}
+function startSync(){
+  stopSync();
+  cloud.col=firebase.firestore().collection('users').doc(cloud.user.uid).collection('patterns');
+  setCloudStatus('syncing'); let first=true;
+  cloud.unsub=cloud.col.onSnapshot(snap=>{
+    if(first){ first=false; const remote=new Map(); snap.forEach(d=>remote.set(d.id,d.data())); initialMerge(remote); }
+    else snap.docChanges().forEach(ch=>{ if(ch.doc.metadata.hasPendingWrites) return; if(ch.type!=='removed') applyRemote(ch.doc.id, ch.doc.data()); });
+    if(cloud.status!=='syncing' || !Object.keys(cloud.pushT).length) setCloudStatus(navigator.onLine===false?'offline':'synced');
+  }, err=>{ console.warn('Sync error', err); setCloudStatus('error'); });
+}
+function stopSync(){ if(cloud.unsub){ cloud.unsub(); cloud.unsub=null; } cloud.col=null; }
+function localUpdated(id){ const e=(store.get(IDX_KEY)||[]).find(x=>x.id===id); return e ? (e.updated||0) : -1; }
+function initialMerge(remote){
+  const idx=store.get(IDX_KEY)||[];
+  for(const [id,r] of remote){
+    const lu=localUpdated(id);
+    if(r.deleted){ if(lu>=0 && lu<=r.updated) deleteLocal(id); continue; }
+    if(lu<0 || r.updated>lu) applyRemote(id,r,true);
+    else if(lu>r.updated) pushPattern(id);
+  }
+  for(const e of idx) if(!remote.has(e.id)) pushPattern(e.id);
+  if(!$('#library').hidden) renderLibrary();
+}
+function deleteLocal(id){
+  store.del(P_KEY+id); store.set(IDX_KEY,(store.get(IDX_KEY)||[]).filter(x=>x.id!==id));
+  if(app.p && app.p.id===id){ app.p=null; showLibrary(); toast('This pattern was deleted on another device.'); }
+  else if(!$('#library').hidden) renderLibrary();
+}
+function applyRemote(id, r, quiet){
+  if(r.deleted){ if(localUpdated(id)>=0 && localUpdated(id)<=r.updated) deleteLocal(id); return; }
+  if(!(r.updated > localUpdated(id))) return;
+  let o; try{ o=JSON.parse(r.payload); }catch(e){ return; }
+  const existing=store.get(P_KEY+id);
+  o.src = r.src || (existing && existing.src) || null; o.updated=r.updated; o.id=id;
+  if(!store.set(P_KEY+id,o)){ o.src=null; if(!store.set(P_KEY+id,o)) return; }
+  const p=deserialize(o); upsertIndex(p);
+  if(app.p && app.p.id===id) reloadOpen(p, quiet);
+  else if(!$('#library').hidden) renderLibrary();
+}
+async function reloadOpen(p, quiet){
+  clearTimeout(saveT);
+  const old=app.p, sameSize = old.w===p.w && old.h===p.h, sameSrc = old.src===p.src;
+  app.p=p;
+  if(!sameSrc){ app.src=null; if(p.src){ try{ app.src=toCanvas(await loadImg(p.src),4096); }catch(e){} } }
+  if(app.hl>=p.palette.length) app.hl=-1; stitchView.o.highlight=app.hl; app.makeHl=-1; makeView.o.highlight=-1; app.undo=[];
+  $('#projName').value=p.name; settingsToUI(); $('#redrawBar').hidden=true;
+  if(sameSize){ makeView.p=p; stitchView.p=p; makeView.invalidate(); stitchView.invalidate(); } else { makeView.setProject(p); stitchView.setProject(p); }
+  refreshAll();
+  if(!quiet) toast('Updated from your other device');
+}
+function queuePush(id){ if(!cloud.col) return; clearTimeout(cloud.pushT[id]); cloud.pushT[id]=setTimeout(()=>pushPattern(id),1500); }
+function flushPushes(){ for(const id of Object.keys(cloud.pushT)){ clearTimeout(cloud.pushT[id]); pushPattern(id); } }
+async function pushPattern(id){
+  delete cloud.pushT[id];
+  if(!cloud.col) return; const o=store.get(P_KEY+id); if(!o) return;
+  const {src, ...rest}=o; const payload=JSON.stringify(rest);
+  const keepSrc = src && payload.length + src.length < 900000 ? src : null;   // database documents max out around 1 MB
+  setCloudStatus('syncing');
+  try{ await cloud.col.doc(id).set({name:o.name||'', updated:o.updated||Date.now(), w:o.w, h:o.h, payload, src:keepSrc, deleted:false}); if(!Object.keys(cloud.pushT).length) setCloudStatus('synced'); }
+  catch(e){ console.warn('Push failed', e); setCloudStatus('error'); }
+}
+function cloudDelete(id){ if(!cloud.col) return; clearTimeout(cloud.pushT[id]); delete cloud.pushT[id]; cloud.col.doc(id).set({deleted:true, updated:Date.now(), payload:'', src:null, name:'', w:0, h:0}).catch(e=>console.warn(e)); }
+
 /* ---------- wire up ---------- */
 $('#homeBtn').onclick=showLibrary;
 $('#newBtn').onclick=()=>{ $('#picInput').dataset.mode='new'; $('#picInput').click(); };
@@ -1640,6 +1789,8 @@ $('#pdfBtn').onclick=async()=>{
   catch(e){ working(false); toast(e.message||'Could not make the PDF.'); }
 };
 
+$('#acctBtn').onclick=acctClick;
+initCloud();
 printUI();
 if(window.innerWidth<=860) $('#viewLbl').textContent='Both';
 renderLibrary();
