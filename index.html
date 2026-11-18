@@ -483,7 +483,11 @@ const SYMBOLS = 'ABCDEFGHJKLMNPRSTUVWXYZ23456789abdefghkmnrtuy+=#%&@*?'.split(''
 const EMPTY = 65535;
 const FAB = [251,248,241];
 const FAB_CSS = 'rgb(251,248,241)';
-const IDX_KEY = 'xw:index', P_KEY = 'xw:p:', PRINT_KEY = 'xw:print';
+const PRINT_KEY = 'xw:print', DEVICE_NS = 'xw:', LAST_UID_KEY = 'xw:lastUid';
+// Patterns live in a namespace: 'xw:' on this device when signed out, 'xw:u:<uid>:' for a signed-in account.
+let NS = DEVICE_NS;
+const idxKey = () => NS+'index';
+const pKey = id => NS+'p:'+id;
 const PAPER = { letter:[215.9,279.4], a4:[210,297] };
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -657,14 +661,18 @@ function sizeForCrop(s, src, long){
   if(r>=1){ s.w=cl(L); s.h=cl(L/r); } else { s.h=cl(L); s.w=cl(L*r); }
 }
 // After cropping: set sensible size/colors. Pixel art gets 1 stitch per sprite pixel.
-function applyCropSettings(s, src, long){
+function applyCropSettings(s, src){
   const a=analyzeCrop(src, s.crop);
   const w=Math.round(a.pw/a.scale), h=Math.round(a.ph/a.scale);
   a.pixel = a.pixel && Math.max(w,h)<=160;   // small, few-color crops = sprites
   if(a.pixel){
     s.pixel=true; s.cleanup='off'; s.colors=Math.max(2,Math.min(40,a.unique)); s.lock=true;
     s.w=Math.max(4,w); s.h=Math.max(4,h);
-  } else { s.pixel=false; sizeForCrop(s, src, long); }
+  } else {
+    s.pixel=false;
+    if(Math.max(a.pw,a.ph)<=300){ s.w=Math.max(4,a.pw); s.h=Math.max(4,a.ph); }   // small crop: 1 stitch per pixel
+    else sizeForCrop(s, src, 100);                                                // big crop: scale down
+  }
   return a;
 }
 // Pixel art often sits on a solid background color: hide it if all four corners share one color.
@@ -1145,7 +1153,8 @@ function openCropper(src, crop){
       ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.strokeRect(X,Y,RW,RH);
       const L=Math.max(8,Math.min(22,RW/3,RH/3)); ctx.lineWidth=4; ctx.lineCap='square'; ctx.beginPath();
       [[X,Y,1,1],[X+RW,Y,-1,1],[X,Y+RH,1,-1],[X+RW,Y+RH,-1,-1]].forEach(([cx,cy,sx,sy])=>{ ctx.moveTo(cx-sx*2,cy+sy*L); ctx.lineTo(cx-sx*2,cy-sy*2); ctx.lineTo(cx+sx*L,cy-sy*2); }); ctx.stroke();
-      $('#cropSize').textContent = (r.w===W&&r.h===H) ? `Whole picture · ${W} × ${H} px` : `${r.w} × ${r.h} px`;
+      const LL=Math.max(r.w,r.h), big=LL>300, sw=big?Math.max(4,Math.round(r.w/LL*100)):Math.max(4,r.w), sh=big?Math.max(4,Math.round(r.h/LL*100)):Math.max(4,r.h);
+      $('#cropSize').textContent = `${(r.w===W&&r.h===H)?'Whole picture · ':''}${r.w} × ${r.h} px → ${sw} × ${sh} stitches${big?' (scaled down)':''}`;
     };
     const layout=()=>{ const b=cv.getBoundingClientRect(); if(!b.width) return; const first=!ready;
       const ocw=cw, och=ch; cw=b.width; ch=b.height; dpr=window.devicePixelRatio||1; cv.width=Math.round(cw*dpr); cv.height=Math.round(ch*dpr);
@@ -1231,23 +1240,23 @@ function scheduleSave(){ clearTimeout(saveT); saveT=setTimeout(saveNow,600); }
 function saveNow(){
   clearTimeout(saveT); const p=app.p; if(!p) return;
   p.updated=Date.now();
-  let ok=store.set(P_KEY+p.id, serialize(p));
-  if(!ok && p.src){ p.src=null; ok=store.set(P_KEY+p.id, serialize(p)); if(ok) toast("Storage is nearly full, so the original picture wasn't kept. Pattern and progress are saved."); }
+  let ok=store.set(pKey(p.id), serialize(p));
+  if(!ok && p.src){ p.src=null; ok=store.set(pKey(p.id), serialize(p)); if(ok) toast("Storage is nearly full, so the original picture wasn't kept. Pattern and progress are saved."); }
   if(!ok){ toast("Couldn't save on this device. Try saving a backup file."); return; }
   upsertIndex(p);
   queuePush(p.id);
 }
 function upsertIndex(p){
-  const st=stats(p), idx=(store.get(IDX_KEY)||[]).filter(e=>e.id!==p.id);
+  const st=stats(p), idx=(store.get(idxKey())||[]).filter(e=>e.id!==p.id);
   idx.push({id:p.id, name:p.name, updated:p.updated, w:p.w, h:p.h, colors:st.colors, pct:st.pct, thumb:thumbURL(p)});
-  store.set(IDX_KEY, idx);
+  store.set(idxKey(), idx);
 }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden'){ saveNow(); flushPushes(); } });
 window.addEventListener('pagehide', saveNow);
 
 /* ---------- library ---------- */
 function renderLibrary(){
-  const idx=(store.get(IDX_KEY)||[]).sort((a,b)=>b.updated-a.updated), grid=$('#libGrid');
+  const idx=(store.get(idxKey())||[]).sort((a,b)=>b.updated-a.updated), grid=$('#libGrid');
   grid.innerHTML=''; $('#libHead').hidden=!idx.length;
   idx.forEach(e=>{
     const card=document.createElement('div'); card.className='pcard';
@@ -1259,7 +1268,7 @@ function renderLibrary(){
     card.querySelector('.pname').onclick=()=>openProject(e.id);
     card.querySelector('.icon-btn').onclick=async()=>{
       const v=await dialog('Delete this pattern?', `"${e.name}" and its stitch progress will be removed from this device.`, [{label:'Cancel',value:false},{label:'Delete',value:true,primary:true}]);
-      if(!v) return; store.del(P_KEY+e.id); store.set(IDX_KEY,(store.get(IDX_KEY)||[]).filter(x=>x.id!==e.id)); cloudDelete(e.id); renderLibrary();
+      if(!v) return; store.del(pKey(e.id)); store.set(idxKey(),(store.get(idxKey())||[]).filter(x=>x.id!==e.id)); cloudDelete(e.id); renderLibrary();
     };
     grid.appendChild(card);
   });
@@ -1319,7 +1328,7 @@ function showLibrary(){
 
 /* ---------- open / create ---------- */
 async function openProject(id){
-  const o=store.get(P_KEY+id); if(!o){ toast("Couldn't open that pattern."); return; }
+  const o=store.get(pKey(id)); if(!o){ toast("Couldn't open that pattern."); return; }
   const p=deserialize(o); app.p=p; app.src=null;
   if(p.src){ try{ app.src=toCanvas(await loadImg(p.src), 4096); }catch(e){} }
   showEditor('make');
@@ -1422,12 +1431,12 @@ function settingsToUI(){
 }
 function updateMatchRow(){
   const p=app.p, s=p.settings;
-  if(!s.pixel || !app.src){ $('#matchRow').hidden=true; return; }
-  const a=analyzeCrop(app.src, s.crop), w=Math.round(a.pw/a.scale), h=Math.round(a.ph/a.scale);
+  if(!app.src){ $('#matchRow').hidden=true; return; }
+  const a=analyzeCrop(app.src, s.crop), sc=s.pixel?a.scale:1, w=Math.round(a.pw/sc), h=Math.round(a.ph/sc);
   const matches = s.w===w && s.h===h;
   $('#matchRow').hidden = matches || w>300 || h>300;
-  $('#matchNote').textContent = `Sprite is ${w} × ${h} pixels`;
-  $('#matchPxBtn').onclick=()=>{ s.w=Math.max(4,w); s.h=Math.max(4,h); if(a.unique) s.colors=Math.max(2,Math.min(40,a.unique)); s.lock=true; settingsToUI(); onSettingChange(); };
+  $('#matchNote').textContent = `Your crop is ${w} × ${h} pixels`;
+  $('#matchPxBtn').onclick=()=>{ s.w=Math.max(4,w); s.h=Math.max(4,h); if(s.pixel && a.unique) s.colors=Math.max(2,Math.min(40,a.unique)); s.lock=true; settingsToUI(); onSettingChange(); };
 }
 function updateTrimNote(){
   const p=app.p, s=p.settings; let show=false;
@@ -1600,7 +1609,7 @@ async function openBackup(file){
   try{
     const o=JSON.parse(await file.text());
     if(!o || !o.grid || !o.w || !o.h || !Array.isArray(o.palette)) throw new Error('bad');
-    const exists=!!store.get(P_KEY+o.id);
+    const exists=!!store.get(pKey(o.id));
     if(exists){
       const v=await dialog('This pattern is already on this device', 'Replace it with the backup (including its stitch progress), or keep both?', [{label:'Cancel',value:null},{label:'Keep both',value:'both'},{label:'Replace',value:'replace',primary:true}]);
       if(!v) return; if(v==='both'){ o.id=uid(); o.name=(o.name||'Pattern')+' (copy)'; }
@@ -1624,7 +1633,7 @@ const FIREBASE_CONFIG = {
   appId: "1:156466614366:web:b36cea436ab6542ccb64cf"
 };
 const FB_VER = '10.12.2';
-const cloud = { ready:false, user:null, col:null, unsub:null, status:'off', pushT:{} };
+const cloud = { ready:false, user:null, col:null, unsub:null, status:'off', pushT:{}, inflight:new Set() };
 function loadScript(src){ return new Promise((res,rej)=>{ const el=document.createElement('script'); el.src=src; el.onload=res; el.onerror=()=>rej(new Error('load '+src)); document.head.appendChild(el); }); }
 async function loadAny(urls){ for(const u of urls){ try{ await loadScript(u); return; }catch(e){} } throw new Error('Could not load '+urls[0]); }
 async function initCloud(){
@@ -1636,9 +1645,37 @@ async function initCloud(){
   }catch(e){ console.warn('Sync unavailable:', e); return; }
   cloud.ready=true; renderAcct();
   firebase.auth().getRedirectResult().catch(e=>signInError(e));
-  firebase.auth().onAuthStateChanged(u=>{ cloud.user=u; if(u) startSync(); else stopSync(); renderAcct(); });
+  firebase.auth().onAuthStateChanged(u=>{ cloud.user=u; if(u){ store.set(LAST_UID_KEY,u.uid); useNamespace('xw:u:'+u.uid+':'); startSync(); offerDeviceMove(); } else { stopSync(); store.del(LAST_UID_KEY); useNamespace(DEVICE_NS); } renderAcct(); });
   window.addEventListener('online',()=>setCloudStatus(cloud.user?'synced':'off'));
   window.addEventListener('offline',()=>setCloudStatus('offline'));
+}
+// Switch which set of patterns is showing (device vs. account). Closes any open pattern first.
+function useNamespace(ns){
+  if(NS===ns) { if(!$('#library').hidden) renderLibrary(); return; }
+  if(app.p){ saveNow(); app.p=null; app.src=null; }
+  NS=ns; showLibrary();
+}
+function deviceIndex(){ try{ return JSON.parse(localStorage.getItem(DEVICE_NS+'index'))||[]; }catch(e){ return []; } }
+// Patterns made while signed out stay on the device. On sign-in, offer to move them into the account.
+async function offerDeviceMove(){
+  const dev=deviceIndex(); if(!dev.length || !cloud.user) return;
+  const n=dev.length;
+  const v=await dialog(`Add ${n} pattern${n>1?'s':''} to your account?`, `${n>1?'These patterns were':'This pattern was'} made on this device while signed out. Add ${n>1?'them':'it'} to ${cloud.user.email||'your account'} so ${n>1?'they sync':'it syncs'} everywhere, or leave ${n>1?'them':'it'} on this device for when you're signed out.`, [{label:'Leave on device',value:false},{label:'Add to account',value:true,primary:true}]);
+  if(!v || !cloud.user || NS===DEVICE_NS) return;
+  for(const e of dev){
+    let o=null; try{ o=JSON.parse(localStorage.getItem(DEVICE_NS+'p:'+e.id)); }catch(_){}
+    if(!o) continue;
+    if(store.get(pKey(e.id))) { o.id=uid(); }
+    o.updated=Date.now(); store.set(pKey(o.id),o); upsertIndex(deserialize(o)); queuePush(o.id);
+    localStorage.removeItem(DEVICE_NS+'p:'+e.id);
+  }
+  localStorage.removeItem(DEVICE_NS+'index');
+  renderLibrary(); toast(`Added to your account`);
+}
+// On sign-out, remove the account's copies from this device (they stay safe in the account).
+function clearAccountCache(uidv){
+  const pre='xw:u:'+uidv+':'; const keys=[];
+  try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.startsWith(pre)) keys.push(k); } keys.forEach(k=>localStorage.removeItem(k)); }catch(e){}
 }
 function setCloudStatus(st){ cloud.status=st; const d=$('#acctBtn .sdot'); if(d){ d.className='sdot '+st; } const b=$('#acctBtn'); if(b && cloud.user) b.title={synced:'Synced',syncing:'Syncing…',error:"Couldn't sync",offline:'Offline: will sync when back online'}[st]||''; }
 const G_ICON='<svg class="g" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
@@ -1647,7 +1684,7 @@ function renderAcct(){
   b.hidden=false; const u=cloud.user;
   if(!u){
     b.className='acct'; b.innerHTML=`${G_ICON}<span>Sign in<span class="lbl-long"> to sync</span></span>`; b.title='Sign in with Google to sync patterns across your devices';
-    $('#libSaveNote').textContent='Patterns and progress are saved on this device. Sign in to sync them across your devices.';
+    $('#libSaveNote').textContent='Signed out: patterns are saved on this device only. Sign in to see your account\'s patterns and sync across devices.';
     $('#syncNote').hidden=true;
   } else {
     const name=u.displayName||u.email||'You', first=name.split(' ')[0];
@@ -1676,8 +1713,14 @@ function signInError(e){
 async function acctClick(){
   if(!cloud.user){ signIn(); return; }
   const u=cloud.user, st={synced:'Everything is synced.',syncing:'Syncing now…',error:"The last sync didn't go through. It will try again.",offline:"You're offline. Changes will sync when you're back online."}[cloud.status]||'';
-  const v=await dialog(`Signed in as ${u.displayName||u.email}`, `${u.email||''}\n\nYour patterns and stitch progress sync automatically on every device where you sign in. ${st}`, [{label:'Sign out',value:'out'},{label:'Close',value:null,primary:true}]);
-  if(v==='out'){ flushPushes(); await firebase.auth().signOut(); toast('Signed out. Your patterns stay on this device.'); }
+  const v=await dialog(`Signed in as ${u.displayName||u.email}`, `${u.email||''}\n\nYour patterns and stitch progress sync automatically on every device where you sign in. ${st}\n\nSigning out removes this account's patterns from this device (they stay safe in your account).`, [{label:'Sign out',value:'out'},{label:'Close',value:null,primary:true}]);
+  if(v==='out'){
+    if(app.p) saveNow();
+    working(true,'Signing out…');
+    flushPushes(); await Promise.race([Promise.allSettled([...cloud.inflight]), new Promise(r=>setTimeout(r,8000))]);
+    const uidv=u.uid; await firebase.auth().signOut(); clearAccountCache(uidv);
+    working(false); toast('Signed out');
+  }
 }
 function startSync(){
   stopSync();
@@ -1690,9 +1733,9 @@ function startSync(){
   }, err=>{ console.warn('Sync error', err); setCloudStatus('error'); });
 }
 function stopSync(){ if(cloud.unsub){ cloud.unsub(); cloud.unsub=null; } cloud.col=null; }
-function localUpdated(id){ const e=(store.get(IDX_KEY)||[]).find(x=>x.id===id); return e ? (e.updated||0) : -1; }
+function localUpdated(id){ const e=(store.get(idxKey())||[]).find(x=>x.id===id); return e ? (e.updated||0) : -1; }
 function initialMerge(remote){
-  const idx=store.get(IDX_KEY)||[];
+  const idx=store.get(idxKey())||[];
   for(const [id,r] of remote){
     const lu=localUpdated(id);
     if(r.deleted){ if(lu>=0 && lu<=r.updated) deleteLocal(id); continue; }
@@ -1703,7 +1746,7 @@ function initialMerge(remote){
   if(!$('#library').hidden) renderLibrary();
 }
 function deleteLocal(id){
-  store.del(P_KEY+id); store.set(IDX_KEY,(store.get(IDX_KEY)||[]).filter(x=>x.id!==id));
+  store.del(pKey(id)); store.set(idxKey(),(store.get(idxKey())||[]).filter(x=>x.id!==id));
   if(app.p && app.p.id===id){ app.p=null; showLibrary(); toast('This pattern was deleted on another device.'); }
   else if(!$('#library').hidden) renderLibrary();
 }
@@ -1711,9 +1754,9 @@ function applyRemote(id, r, quiet){
   if(r.deleted){ if(localUpdated(id)>=0 && localUpdated(id)<=r.updated) deleteLocal(id); return; }
   if(!(r.updated > localUpdated(id))) return;
   let o; try{ o=JSON.parse(r.payload); }catch(e){ return; }
-  const existing=store.get(P_KEY+id);
+  const existing=store.get(pKey(id));
   o.src = r.src || (existing && existing.src) || null; o.updated=r.updated; o.id=id;
-  if(!store.set(P_KEY+id,o)){ o.src=null; if(!store.set(P_KEY+id,o)) return; }
+  if(!store.set(pKey(id),o)){ o.src=null; if(!store.set(pKey(id),o)) return; }
   const p=deserialize(o); upsertIndex(p);
   if(app.p && app.p.id===id) reloadOpen(p, quiet);
   else if(!$('#library').hidden) renderLibrary();
@@ -1733,12 +1776,15 @@ function queuePush(id){ if(!cloud.col) return; clearTimeout(cloud.pushT[id]); cl
 function flushPushes(){ for(const id of Object.keys(cloud.pushT)){ clearTimeout(cloud.pushT[id]); pushPattern(id); } }
 async function pushPattern(id){
   delete cloud.pushT[id];
-  if(!cloud.col) return; const o=store.get(P_KEY+id); if(!o) return;
+  if(!cloud.col) return; const o=store.get(pKey(id)); if(!o) return;
   const {src, ...rest}=o; const payload=JSON.stringify(rest);
   const keepSrc = src && payload.length + src.length < 900000 ? src : null;   // database documents max out around 1 MB
   setCloudStatus('syncing');
-  try{ await cloud.col.doc(id).set({name:o.name||'', updated:o.updated||Date.now(), w:o.w, h:o.h, payload, src:keepSrc, deleted:false}); if(!Object.keys(cloud.pushT).length) setCloudStatus('synced'); }
+  const pr=cloud.col.doc(id).set({name:o.name||'', updated:o.updated||Date.now(), w:o.w, h:o.h, payload, src:keepSrc, deleted:false});
+  cloud.inflight.add(pr);
+  try{ await pr; if(!Object.keys(cloud.pushT).length) setCloudStatus('synced'); }
   catch(e){ console.warn('Push failed', e); setCloudStatus('error'); }
+  finally{ cloud.inflight.delete(pr); }
 }
 function cloudDelete(id){ if(!cloud.col) return; clearTimeout(cloud.pushT[id]); delete cloud.pushT[id]; cloud.col.doc(id).set({deleted:true, updated:Date.now(), payload:'', src:null, name:'', w:0, h:0}).catch(e=>console.warn(e)); }
 
@@ -1790,6 +1836,7 @@ $('#pdfBtn').onclick=async()=>{
 };
 
 $('#acctBtn').onclick=acctClick;
+if(FIREBASE_CONFIG){ const lu=store.get(LAST_UID_KEY); if(lu) NS='xw:u:'+lu+':'; }
 initCloud();
 printUI();
 if(window.innerWidth<=860) $('#viewLbl').textContent='Both';
