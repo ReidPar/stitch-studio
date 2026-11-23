@@ -158,6 +158,33 @@ details[open] summary::after{content:'–'}
 .chip.complete{opacity:.5}
 .markhint{position:absolute;left:50%;top:12px;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .3s}
 
+/* Draw */
+.drawbar{flex:none;display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--paper);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.drawbar::-webkit-scrollbar{display:none}
+.drawbar .seg button{display:flex;align-items:center;gap:6px;padding:7px 12px}
+.drawbar .seg button svg{width:18px;height:18px;flex:none}
+.drawbar .seg.sizes button{padding:7px 10px;min-width:36px;justify-content:center}
+.drawbar .seg.sizes i{display:block;background:currentColor;border-radius:2px}
+.togglebtn{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:11px;padding:7px 12px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap;flex:none}
+.togglebtn svg{width:18px;height:18px}
+.togglebtn[aria-pressed="true"]{background:var(--thread);border-color:var(--thread);color:#fff}
+.drawbar .icon-btn:disabled,.toolbar .icon-btn:disabled{opacity:.35;cursor:default}
+.mob-only{display:none!important}
+#drawCanvas{cursor:crosshair}
+.dchip{position:relative;flex:none;width:44px;height:44px;border-radius:12px;border:2px solid transparent;padding:3px;background:#fff;box-shadow:0 0 0 1px var(--line)}
+.dchip span{display:block;width:100%;height:100%;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.dchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:none}
+.dchip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.dchip.add{display:flex;align-items:center;justify-content:center;color:var(--muted);background:var(--linen)}
+.dchip.add svg{width:20px;height:20px}
+.dchip .edit{position:absolute;right:-4px;bottom:-4px;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.dchip .edit svg{width:11px;height:11px}
+.chips .dsep{flex:none;width:1px;background:var(--line);margin:4px 2px}
+.blank-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.blank-presets button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 4px;font-weight:600;font-size:14px}
+.blank-presets button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+
 /* Print */
 .pagenav{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:4px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:0 6px 20px rgba(60,40,20,.12)}
 .pagenav span{min-width:110px;text-align:center;font-size:13px;font-weight:600}
@@ -243,6 +270,14 @@ details[open] summary::after{content:'–'}
   .viewbtn{padding:8px 8px}
   .tsep{margin:0 2px}
   .progress{padding:8px 12px}
+  .drawbar{padding:6px 8px;gap:6px}
+  .desk-only{display:none!important}
+  .toast{bottom:96px}
+  .mob-only{display:flex!important}
+  .drawbar .seg.tools button span,.togglebtn span{display:none}
+  .drawbar .seg button{padding:7px 9px}
+  .togglebtn{padding:7px 9px}
+  .tabbtn{padding:6px 12px}
   .crop-top{padding:12px 14px}
   .acct .lbl-long{display:none}
   .acct{padding:6px 10px 6px 8px}
@@ -267,6 +302,7 @@ details[open] summary::after{content:'–'}
 
 <nav class="tabs" id="tabs" hidden>
   <button class="tabbtn" data-tab="make" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2.2"/><circle cx="10" cy="12" r="2.2"/><circle cx="18" cy="18" r="2.2"/></svg>Make</button>
+  <button class="tabbtn" data-tab="draw" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg>Draw</button>
   <button class="tabbtn" data-tab="stitch" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></svg>Stitch</button>
   <button class="tabbtn" data-tab="print" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2"/><rect x="7" y="14" width="10" height="6"/></svg>Print</button>
 </nav>
@@ -279,10 +315,13 @@ details[open] summary::after{content:'–'}
         <div>
           <h1>Turn any picture into a cross stitch pattern.</h1>
           <p>Pick a photo or drawing, choose the size and how many colors, then follow along stitch by stitch.</p>
+          <div class="hero-btns">
           <button class="btn accent big" id="newBtn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             Choose a picture
           </button>
+          <button class="btn ghost big" id="blankBtn">Start from scratch</button>
+          </div>
         </div>
         <div class="hero-art"><canvas id="heroCanvas"></canvas></div>
       </div>
@@ -333,7 +372,7 @@ details[open] summary::after{content:'–'}
               </button>
               <label class="field"><span>Height (stitches)</span><input class="num" id="hIn" type="number" inputmode="numeric" min="4" max="300"></label>
             </div>
-            <div class="row switchrow" style="margin-top:14px">
+            <div class="row switchrow pic-only" style="margin-top:14px">
               <label class="switch"><input type="checkbox" id="pixelIn"><span></span></label>
               <div style="flex:1"><b style="font-size:14px">Pixel art</b><div class="note">Keeps hard edges and exact colors. Best for video game sprites.</div></div>
             </div>
@@ -352,13 +391,13 @@ details[open] summary::after{content:'–'}
           <div class="card">
             <h3>Colors</h3>
             <div class="bigcount"><strong id="colorCount">0</strong><span>colors in this pattern</span></div>
-            <div class="rangehead"><span>Most colors allowed</span><b id="colorsOut">12</b></div>
+            <div class="pic-only"><div class="rangehead"><span>Most colors allowed</span><b id="colorsOut">12</b></div>
             <input type="range" id="colorsIn" min="2" max="40" step="1">
-            <div class="optlabel">Tidy up stray single stitches</div>
-            <div class="seg" id="cleanupSeg">
+            <div class="optlabel">Tidy up stray single stitches</div></div>
+            <div class="seg pic-only" id="cleanupSeg">
               <button data-v="off">None</button><button data-v="light">Some</button><button data-v="strong">More</button>
             </div>
-            <details style="margin-top:16px">
+            <details class="pic-only" style="margin-top:16px">
               <summary>Adjust picture</summary>
               <div style="margin-top:12px">
                 <div class="rangehead"><span>Brightness</span><b id="brightOut">0</b></div>
@@ -379,6 +418,39 @@ details[open] summary::after{content:'–'}
           </div>
         </aside>
       </div>
+    </div>
+
+    <!-- DRAW -->
+    <div class="tab" id="tab-draw" hidden>
+      <div class="drawbar">
+        <div class="seg tools" id="toolSeg">
+          <button data-v="pen" title="Pen (B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg><span>Pen</span></button>
+          <button data-v="erase" title="Eraser (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20h11"/><path d="M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L11 19H8z"/><path d="M9 11l4.5 4.5"/></svg><span>Eraser</span></button>
+          <button data-v="fill" title="Fill (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l7-7 7 7-7 7z"/><path d="M4 12h14"/><path d="M20 15s2 2.4 2 3.8a2 2 0 0 1-4 0C18 17.4 20 15 20 15z"/></svg><span>Fill</span></button>
+          <button data-v="pick" title="Pick a color (I)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4l5 5-2.5 2.5-5-5z"/><path d="M13.5 7.5L5 16v3h3l8.5-8.5"/></svg><span>Pick</span></button>
+        </div>
+        <div class="seg sizes" id="brushSeg" title="Brush size (1, 2, 3)">
+          <button data-v="1" aria-label="Brush size 1"><i style="width:5px;height:5px"></i></button>
+          <button data-v="2" aria-label="Brush size 2"><i style="width:9px;height:9px"></i></button>
+          <button data-v="3" aria-label="Brush size 3"><i style="width:13px;height:13px"></i></button>
+        </div>
+        <button class="togglebtn" id="mirrorBtn" aria-pressed="false" title="Mirror left and right (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 8v2M12 13v2M12 18v3"/><path d="M9 7L3 12l6 5zM15 7l6 5-6 5z"/></svg><span>Mirror</span></button>
+        <div class="hdr-spacer"></div>
+        <button class="icon-btn desk-only" id="dUndo" title="Undo" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+        <button class="icon-btn desk-only" id="dRedo" title="Redo" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+      </div>
+      <div class="stage stitch-stage">
+        <canvas id="drawCanvas"></canvas>
+        <div class="markhint" id="drawHint" style="opacity:0">One finger draws · two fingers move and zoom</div>
+        <div class="toolbar">
+          <button class="icon-btn zoombtn" id="dZoomOut" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+          <button class="icon-btn zoombtn" id="dZoomIn" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="icon-btn mob-only" id="dUndoM" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+          <button class="icon-btn mob-only" id="dRedoM" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+          <button class="icon-btn" id="dFit" title="Fit to screen" aria-label="Fit to screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
+      <div class="chips" id="dchips"></div>
     </div>
 
     <!-- STITCH -->
@@ -472,6 +544,13 @@ details[open] summary::after{content:'–'}
     <div class="right"><button class="btn ghost" id="cropCancel">Cancel</button><button class="btn accent" id="cropDone">Done</button></div>
   </div>
 </div>
+<div class="modal" id="blankModal" hidden><div class="dialog">
+  <h4>Start from scratch</h4>
+  <p style="margin-bottom:14px">Pick a canvas size in stitches. You can change it later on the Make tab.</p>
+  <div class="blank-presets" id="blankPresets"><button data-v="16">16 × 16</button><button data-v="30">30 × 30</button><button data-v="50">50 × 50</button><button data-v="80">80 × 80</button></div>
+  <div class="row" style="margin-bottom:18px"><label class="field"><span>Width</span><input class="num" id="blankW" type="number" inputmode="numeric" min="4" max="300" value="30"></label><label class="field"><span>Height</span><input class="num" id="blankH" type="number" inputmode="numeric" min="4" max="300" value="30"></label></div>
+  <div class="acts"><button class="btn small ghost" id="blankCancel">Cancel</button><button class="btn small accent" id="blankCreate">Create</button></div>
+</div></div>
 <div class="modal" id="modal" hidden><div class="dialog"><h4 id="mTitle"></h4><p id="mBody"></p><div class="acts" id="mActs"></div></div></div>
 <div class="working" id="working" hidden><span id="workingText">Working…</span></div>
 <div class="toast" id="toast"></div>
@@ -812,9 +891,13 @@ class ChartView{
       if(this.o.marking && e.button!==1 && e.button!==2){
         const cell=this.cellAt(pt.x,pt.y);
         if(cell){ const i=cell.r*this.p.w+cell.c; if(this.stitchable(i)){ this.stroke={value:this.p.done[i]?0:1, cells:[], last:cell}; this.paint(cell.c,cell.r); this.draw(); } }
+      } else if(this.o.drawing && e.button!==1 && e.button!==2){
+        const cell=this.cellAt(pt.x,pt.y);
+        if(cell && this.o.onDrawStart(cell)){ this.dstroke={last:cell}; this.draw(); }
       }
     } else if(this.ptrs.size===2){
       if(this.stroke){ this.revert(this.stroke); this.stroke=null; this.draw(); }
+      if(this.dstroke){ this.dstroke=null; this.o.onDrawCancel(); }
       const [a,b]=[...this.ptrs.values()];
       this.pinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1, mx:(a.x+b.x)/2, my:(a.y+b.y)/2, s:this.s, ox:this.ox, oy:this.oy}; this.pan=null;
     }
@@ -831,6 +914,13 @@ class ChartView{
       let x0=a.c,y0=a.r; const x1=cell.c,y1=cell.r, dx=Math.abs(x1-x0), dy=-Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx+dy;
       for(;;){ this.paint(x0,y0); if(x0===x1&&y0===y1) break; const e2=2*err; if(e2>=dy){err+=dy;x0+=sx;} if(e2<=dx){err+=dx;y0+=sy;} }
       this.stroke.last=cell; this.draw();
+    } else if(this.dstroke){
+      const cell=this.cellAt(pt.x,pt.y,true), a=this.dstroke.last;
+      if(cell.c!==a.c || cell.r!==a.r){
+        let x0=a.c,y0=a.r; const x1=cell.c,y1=cell.r, dx=Math.abs(x1-x0), dy=-Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx+dy;
+        for(;;){ const e2=2*err; if(e2>=dy){err+=dy;x0+=sx;} if(e2<=dx){err+=dx;y0+=sy;} this.o.onDrawMove(x0,y0); if(x0===x1&&y0===y1) break; }
+        this.dstroke.last=cell; this.bmpDirty=true; this.draw();
+      }
     } else if(this.pan){
       this.ox=this.pan.ox+pt.x-this.pan.x; this.oy=this.pan.oy+pt.y-this.pan.y; this.draw();
     }
@@ -840,6 +930,7 @@ class ChartView{
     this.ptrs.delete(e.pointerId);
     if(this.ptrs.size===0){
       if(this.stroke){ const st=this.stroke; this.stroke=null; if(st.cells.length && this.o.onStroke) this.o.onStroke(st); }
+      if(this.dstroke){ this.dstroke=null; this.o.onDrawEnd(); }
       this.pan=null; this.pinch=null;
     } else if(this.ptrs.size===1){
       this.pinch=null; const pt=[...this.ptrs.values()][0]; this.pan={x:pt.x,y:pt.y,ox:this.ox,oy:this.oy};
@@ -904,6 +995,7 @@ class ChartView{
       ctx.strokeStyle= s>=5 ? 'rgba(42,36,32,.62)' : 'rgba(42,36,32,.3)'; ctx.lineWidth= s>=5 ? 1.5 : 1; ctx.stroke();
     }
     ctx.strokeStyle='rgba(42,36,32,.7)'; ctx.lineWidth=1.5; ctx.strokeRect(ox,oy,w*s,h*s);
+    if(this.o.overlay) this.o.overlay(ctx,this);
     if(s*10>=24) this.rulers();
   }
   rulers(){
@@ -1370,7 +1462,7 @@ async function replacePicture(file){
   working(true,'Drawing your pattern…');
   try{
     await nextFrame();
-    const s=p.settings; s.crop=crop; s.lock=true; const info=applyCropSettings(s, src);
+    const s=p.settings; s.crop=crop; s.lock=true; s.blank=false; const info=applyCropSettings(s, src);
     const st=storeSource(src, crop, s.pixel); s.crop=st.crop;
     app.src=st.src; p.src=st.url; settingsToUI(); await regenerate(true);
     if(info.pixel) toast('Pixel art detected: 1 stitch per pixel');
@@ -1393,23 +1485,26 @@ function showEditor(tab){
   $('#library').hidden=true; $('#editor').hidden=false; $('#tabs').hidden=false; $('#projName').hidden=false; $('#hdrSep').hidden=false;
   $('#homeBtn').classList.remove('home-only');
   $('#projName').value=p.name;
-  app.undo=[]; app.hl=-1; app.makeHl=-1; app.print.page=0;
+  app.undo=[]; app.hl=-1; app.makeHl=-1; app.print.page=0; resetDrawHistory();
+  draw.color=firstColor(p);
   stitchView.o.highlight=-1; makeView.o.highlight=-1;
   settingsToUI();
   $('#redrawBar').hidden=true;
-  makeView.setProject(p); stitchView.setProject(p);
+  makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p);
   refreshAll();
   switchTab(tab||'make');
 }
 function switchTab(t){
   app.tab=t;
-  ['make','stitch','print'].forEach(k=>{ $('#tab-'+k).hidden = k!==t; });
+  ['make','draw','stitch','print'].forEach(k=>{ $('#tab-'+k).hidden = k!==t; });
   $$('.tabbtn').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.tab===t)));
   if(t==='print') requestAnimationFrame(drawPrintPreview);
   if(t==='stitch'){ renderChips(); updateProgress(); }
+  if(t==='make'){ renderPalette(); }
+  if(t==='draw'){ renderDrawPalette(); updateDrawUI(); showDrawHint(); }
 }
 function refreshAll(){
-  makeView.invalidate(); stitchView.invalidate();
+  makeView.invalidate(); stitchView.invalidate(); drawView.invalidate(); renderDrawPalette(); updateDrawUI();
   renderPalette(); renderChips(); updateProgress(); updateSizeInfo();
   if(app.tab==='print') drawPrintPreview();
 }
@@ -1425,14 +1520,16 @@ function settingsToUI(){
   $('#contrastIn').value=s.contrast; $('#contrastOut').textContent=s.contrast;
   $('#satIn').value=s.sat; $('#satOut').textContent=s.sat;
   const has=!!app.src;
-  ['#wIn','#hIn','#colorsIn','#brightIn','#contrastIn','#satIn'].forEach(id=>$(id).disabled=!has);
+  ['#colorsIn','#brightIn','#contrastIn','#satIn'].forEach(id=>$(id).disabled=!has);
   $$('#cleanupSeg button').forEach(b=>b.disabled=!has);
   const th=$('#srcThumb');
   if(app.src){ const c=croppedSource(app.src, s.crop); th.src=toCanvas(c,160).toDataURL('image/jpeg',0.85); th.hidden=false; }
   else if(app.p.src){ th.src=app.p.src; th.hidden=false; } else th.hidden=true;
-  $('#cropBtn').disabled=!has;
+  $('#cropBtn').disabled=!has; $('#cropBtn').hidden=!has;
+  $$('.pic-only').forEach(el=>el.hidden=!has);
   updateTrimNote();
-  $('#picNote').textContent = has ? 'The picture this pattern is made from.' : "The original picture wasn't kept, so size and colors can't be redrawn. You can still merge and edit colors.";
+  $('#picNote').textContent = has ? 'The picture this pattern is made from.' : s.blank ? 'Drawn from scratch. Add a picture any time.' : "The original picture wasn't kept, so colors can't be redrawn from it. Size changes add or trim stitches at the edges.";
+  $('#changePicBtn').textContent = (has || app.p.src) ? 'Change' : 'Add picture';
 }
 function updateMatchRow(){
   const p=app.p, s=p.settings;
@@ -1461,6 +1558,7 @@ function updateSizeInfo(){
 let regenT=0;
 function onSettingChange(){
   const p=app.p, s=p.settings;
+  if(!app.src){ return resizeFromInputs(); }
   s.w=Math.max(4,Math.min(300,parseInt($('#wIn').value)||s.w));
   s.h=Math.max(4,Math.min(300,parseInt($('#hIn').value)||s.h));
   s.colors=parseInt($('#colorsIn').value); s.bright=parseInt($('#brightIn').value); s.contrast=parseInt($('#contrastIn').value); s.sat=parseInt($('#satIn').value);
@@ -1476,9 +1574,9 @@ async function regenerate(force){
   const sizeChanged = p.w!==s.w || p.h!==s.h;
   Object.assign(p,{w:s.w, h:s.h, grid:r.grid, palette:r.palette, done:new Uint8Array(s.w*s.h), edited:false});
   autoHideBackground(p);
-  app.undo=[]; app.hl=-1; app.makeHl=-1; stitchView.o.highlight=-1; makeView.o.highlight=-1;
+  app.undo=[]; app.hl=-1; app.makeHl=-1; stitchView.o.highlight=-1; makeView.o.highlight=-1; resetDrawHistory(); draw.color=firstColor(p);
   $('#redrawBar').hidden=true; $('#busy').hidden=true;
-  if(sizeChanged || force){ makeView.setProject(p); stitchView.setProject(p); } else { makeView.p=p; stitchView.p=p; stitchView.needFit=true; }
+  if(sizeChanged || force){ makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p); } else { makeView.p=p; stitchView.p=p; drawView.p=p; stitchView.needFit=true; }
   refreshAll(); scheduleSave();
 }
 
@@ -1520,11 +1618,164 @@ function renderPalette(){
 function afterPaletteChange(){
   app.makeHl=-1; makeView.o.highlight=-1;
   if(app.hl>=app.p.palette.length) app.hl=-1; stitchView.o.highlight=app.hl;
-  app.undo=[]; refreshAll(); scheduleSave();
+  app.undo=[]; resetDrawHistory(); if(draw.color>=app.p.palette.length || (app.p.palette[draw.color]&&app.p.palette[draw.color].skip)) draw.color=firstColor(app.p);
+  refreshAll(); scheduleSave();
 }
 const ICON_EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 const ICON_EYE_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/></svg>';
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- draw tab ---------- */
+const draw = { tool:'pen', size:1, mirror:false, color:0, undo:[], redo:[], st:null, hinted:false };
+const drawView = new ChartView($('#drawCanvas'), { mode:'color', progress:false, drawing:true,
+  onDrawStart:drawStart, onDrawMove:(c,r)=>paintAt(c,r), onDrawEnd:commitStroke, onDrawCancel:cancelStroke, overlay:drawOverlay });
+function firstColor(p){ const i=p.palette.findIndex(c=>!c.skip); return i<0?0:i; }
+function resetDrawHistory(){ draw.undo=[]; draw.redo=[]; draw.st=null; updateDrawUI(); }
+function brushCells(c,r){
+  const p=app.p, n=draw.size, o=n===3?-1:0, out=[];
+  for(let dy=0;dy<n;dy++) for(let dx=0;dx<n;dx++){ const x=c+dx+o, y=r+dy+o; if(x>=0&&y>=0&&x<p.w&&y<p.h) out.push(y*p.w+x); }
+  if(draw.mirror){ const m=out.map(i=>{ const x=i%p.w, y=(i/p.w)|0; return y*p.w+(p.w-1-x); }); out.push(...m); }
+  return out;
+}
+function setCell(i,v){
+  const p=app.p; if(p.grid[i]===v) return;
+  if(!draw.st.map.has(i)) draw.st.map.set(i,[p.grid[i],p.done[i]]);
+  p.grid[i]=v; p.done[i]=0;   // a changed stitch is no longer "done"
+}
+function drawValue(){ return draw.tool==='erase' ? EMPTY : draw.color; }
+function paintAt(c,r){ if(!draw.st) return; const v=drawValue(); for(const i of brushCells(c,r)) setCell(i,v); }
+function floodFill(x,y,v){
+  const p=app.p, w=p.w, h=p.h, start=y*w+x, target=p.grid[start]; if(target===v) return;
+  const seen=new Uint8Array(w*h), stack=[start]; seen[start]=1;
+  while(stack.length){ const i=stack.pop(); setCell(i,v); const cx=i%w, cy=(i/w)|0;
+    if(cx>0 && !seen[i-1] && p.grid[i-1]===target){ seen[i-1]=1; stack.push(i-1); }
+    if(cx<w-1 && !seen[i+1] && p.grid[i+1]===target){ seen[i+1]=1; stack.push(i+1); }
+    if(cy>0 && !seen[i-w] && p.grid[i-w]===target){ seen[i-w]=1; stack.push(i-w); }
+    if(cy<h-1 && !seen[i+w] && p.grid[i+w]===target){ seen[i+w]=1; stack.push(i+w); } }
+}
+function drawStart(cell){
+  const p=app.p; if(!p) return false;
+  if(draw.tool==='pick'){
+    const v=p.grid[cell.r*p.w+cell.c];
+    if(v===EMPTY || p.palette[v].skip){ setTool('erase'); toast('Picked bare fabric: eraser on'); }
+    else { draw.color=v; setTool('pen'); }
+    return false;
+  }
+  if(draw.tool!=='erase' && (!p.palette.length || !p.palette[draw.color] || p.palette[draw.color].skip)){ toast('Add a color first with the + button'); return false; }
+  draw.st={map:new Map()};
+  if(draw.tool==='fill'){ const v=drawValue(); floodFill(cell.c,cell.r,v); if(draw.mirror){ const mx=p.w-1-cell.c; if(mx!==cell.c) floodFill(mx,cell.r,v); } commitStroke(); return false; }
+  paintAt(cell.c,cell.r); drawView.bmpDirty=true; return true;
+}
+function cancelStroke(){ const st=draw.st; draw.st=null; if(!st) return; const p=app.p; for(const [i,[g,d]] of st.map){ p.grid[i]=g; p.done[i]=d; } drawView.invalidate(); }
+function commitStroke(){
+  const st=draw.st; draw.st=null; if(!st || !st.map.size){ drawView.invalidate(); return; }
+  const p=app.p, cells=[...st.map.keys()], before=[...st.map.values()], after=cells.map(i=>p.grid[i]);
+  draw.undo.push({cells,before,after}); if(draw.undo.length>150) draw.undo.shift(); draw.redo=[];
+  afterDrawChange();
+}
+function afterDrawChange(){
+  const p=app.p; p.edited=true; app.undo=[];
+  makeView.invalidate(); stitchView.invalidate(); drawView.invalidate();
+  updateSizeInfo(); updateDrawUI(); scheduleSave();
+}
+function undoDraw(){
+  const e=draw.undo.pop(); if(!e){ toast('Nothing to undo'); return; }
+  const p=app.p; e.cells.forEach((i,k)=>{ p.grid[i]=e.before[k][0]; p.done[i]=e.before[k][1]; });
+  draw.redo.push(e); afterDrawChange();
+}
+function redoDraw(){
+  const e=draw.redo.pop(); if(!e) return;
+  const p=app.p; e.cells.forEach((i,k)=>{ p.grid[i]=e.after[k]; p.done[i]=0; });
+  draw.undo.push(e); afterDrawChange();
+}
+function setTool(t){ draw.tool=t; updateDrawUI(); renderDrawPalette(); }
+function updateDrawUI(){
+  setSeg('#toolSeg', draw.tool); setSeg('#brushSeg', String(draw.size));
+  $('#mirrorBtn').setAttribute('aria-pressed', String(draw.mirror));
+  $('#dUndo').disabled=$('#dUndoM').disabled=!draw.undo.length; $('#dRedo').disabled=$('#dRedoM').disabled=!draw.redo.length;
+  $$('#brushSeg button').forEach(b=>b.disabled = draw.tool==='fill' || draw.tool==='pick');
+}
+function drawOverlay(ctx,v){
+  if(!draw.mirror || !v.p) return;
+  const x=Math.round(v.ox+v.p.w/2*v.s)+.5, y0=Math.max(0,v.oy), y1=Math.min(v.H,v.oy+v.p.h*v.s);
+  ctx.save(); ctx.setLineDash([6,5]); ctx.strokeStyle='#C2412D'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y0-8); ctx.lineTo(x,y1+8); ctx.stroke(); ctx.restore();
+}
+function renderDrawPalette(){
+  const p=app.p, wrap=$('#dchips'); if(!p || !wrap) return; wrap.innerHTML='';
+  const er=document.createElement('button'); er.className='dchip'; er.title='Eraser: bare fabric';
+  er.setAttribute('aria-pressed', String(draw.tool==='erase'));
+  er.innerHTML=`<span style="background:${FAB_CSS};background-image:linear-gradient(135deg,transparent 45%,#C2412D 45%,#C2412D 55%,transparent 55%)"></span>`;
+  er.onclick=()=>setTool('erase'); wrap.appendChild(er);
+  const sep=document.createElement('div'); sep.className='dsep'; wrap.appendChild(sep);
+  p.palette.forEach((c,i)=>{
+    if(c.skip) return;
+    const sel = draw.tool!=='erase' && draw.color===i;
+    const b=document.createElement(sel?'label':'button'); b.className='dchip'; b.setAttribute('aria-pressed',String(sel));
+    b.title = (c.label || `Color ${i+1}`) + (sel ? ' (tap again to change the shade)' : '');
+    b.innerHTML=`<span style="background:${css(c.rgb)}"></span>`;
+    if(sel){
+      b.insertAdjacentHTML('beforeend','<i class="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg></i>');
+      const inp=document.createElement('input'); inp.type='color'; inp.value=toHex(c.rgb); inp.setAttribute('aria-label','Change this color');
+      inp.addEventListener('input',()=>{ c.rgb=hexToRgb(inp.value); b.querySelector('span').style.background=inp.value; p.edited=true; makeView.invalidate(); stitchView.invalidate(); drawView.invalidate(); });
+      inp.addEventListener('change',()=>{ scheduleSave(); renderChips(); });
+      b.appendChild(inp);
+    } else b.onclick=()=>{ draw.color=i; if(draw.tool==='erase'||draw.tool==='pick') draw.tool='pen'; updateDrawUI(); renderDrawPalette(); };
+    wrap.appendChild(b);
+  });
+  if(p.palette.length < SYMBOLS.length){
+    const add=document.createElement('label'); add.className='dchip add'; add.title='Add a color';
+    add.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+    const inp=document.createElement('input'); inp.type='color'; inp.value='#7a9cc6'; inp.setAttribute('aria-label','Add a color');
+    inp.addEventListener('change',()=>addColor(hexToRgb(inp.value)));
+    add.appendChild(inp); wrap.appendChild(add);
+  }
+}
+function addColor(rgb){
+  const p=app.p; const used=new Set(p.palette.map(c=>c.sym)); const sym=SYMBOLS.find(x=>!used.has(x));
+  if(!sym){ toast('That’s the most colors a pattern can have'); return; }
+  p.palette.push({rgb, sym, label:'', skip:false}); p.edited=true;
+  draw.color=p.palette.length-1; draw.tool='pen';
+  updateDrawUI(); renderDrawPalette(); renderChips(); updateSizeInfo(); scheduleSave();
+  requestAnimationFrame(()=>{ const w=$('#dchips'); w.scrollLeft=w.scrollWidth; });
+}
+function showDrawHint(){
+  if(draw.hinted) return; draw.hinted=true;
+  const h=$('#drawHint'); if(!matchMedia('(pointer:coarse)').matches) h.textContent='Click and drag to draw · scroll to zoom · B E G I M for tools';
+  h.style.opacity='1'; setTimeout(()=>h.style.opacity='0',3200);
+}
+// Patterns without a picture: changing the size adds or trims stitches around the edges (centered).
+async function resizeFromInputs(){
+  const p=app.p, s=p.settings;
+  const nw=Math.max(4,Math.min(300,parseInt($('#wIn').value)||p.w)), nh=Math.max(4,Math.min(300,parseInt($('#hIn').value)||p.h));
+  $('#wIn').value=nw; $('#hIn').value=nh;
+  if(nw===p.w && nh===p.h) return;
+  const dx=Math.floor((nw-p.w)/2), dy=Math.floor((nh-p.h)/2);
+  let lost=0; for(let y=0;y<p.h;y++) for(let x=0;x<p.w;x++){ const nx=x+dx, ny=y+dy; if((nx<0||ny<0||nx>=nw||ny>=nh) && p.grid[y*p.w+x]!==EMPTY) lost++; }
+  if(lost){ const v=await dialog('Trim stitches at the edges?', `Making the canvas smaller removes ${lost} stitch${lost>1?'es':''} around the edges.`, [{label:'Cancel',value:false},{label:'Trim',value:true,primary:true}]); if(!v){ $('#wIn').value=p.w; $('#hIn').value=p.h; return; } }
+  const g=new Uint16Array(nw*nh).fill(EMPTY), d=new Uint8Array(nw*nh);
+  for(let y=0;y<p.h;y++) for(let x=0;x<p.w;x++){ const nx=x+dx, ny=y+dy; if(nx<0||ny<0||nx>=nw||ny>=nh) continue; g[ny*nw+nx]=p.grid[y*p.w+x]; d[ny*nw+nx]=p.done[y*p.w+x]; }
+  Object.assign(p,{w:nw,h:nh,grid:g,done:d}); s.w=nw; s.h=nh; p.edited=true;
+  app.undo=[]; resetDrawHistory();
+  makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p);
+  refreshAll(); scheduleSave();
+}
+// Blank canvas
+const STARTER=[[42,36,32],[255,255,255],[194,65,45],[233,162,59],[242,208,92],[95,127,105],[46,94,115],[126,96,160],[232,164,180],[139,94,60]];
+function openBlankDialog(){
+  const m=$('#blankModal'); m.hidden=false;
+  const sync=()=>{ const w=parseInt($('#blankW').value), h=parseInt($('#blankH').value); $$('#blankPresets button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===w && w===h))); };
+  $$('#blankPresets button').forEach(b=>b.onclick=()=>{ $('#blankW').value=b.dataset.v; $('#blankH').value=b.dataset.v; sync(); });
+  $('#blankW').oninput=sync; $('#blankH').oninput=sync; sync();
+  $('#blankCancel').onclick=()=>{ m.hidden=true; };
+  $('#blankCreate').onclick=()=>{ m.hidden=true; createBlank(Math.max(4,Math.min(300,parseInt($('#blankW').value)||30)), Math.max(4,Math.min(300,parseInt($('#blankH').value)||30))); };
+}
+function createBlank(w,h){
+  const s=defaultSettings(w,h); Object.assign(s,{w,h,blank:true,pixel:true,cleanup:'off'});
+  const p={id:uid(), name:'New design', created:Date.now(), updated:Date.now(), settings:s, edited:true, src:null, w, h,
+    grid:new Uint16Array(w*h).fill(EMPTY), done:new Uint8Array(w*h), palette:STARTER.map((rgb,i)=>({rgb, sym:SYMBOLS[i], label:'', skip:false}))};
+  app.p=p; app.src=null; draw.tool='pen'; draw.size=1; draw.mirror=false;
+  saveNow(); showEditor('draw'); draw.color=2; renderDrawPalette();
+}
 
 /* ---------- stitch tab ---------- */
 function renderChips(){
@@ -1771,9 +2022,9 @@ async function reloadOpen(p, quiet){
   const old=app.p, sameSize = old.w===p.w && old.h===p.h, sameSrc = old.src===p.src;
   app.p=p;
   if(!sameSrc){ app.src=null; if(p.src){ try{ app.src=toCanvas(await loadImg(p.src),4096); }catch(e){} } }
-  if(app.hl>=p.palette.length) app.hl=-1; stitchView.o.highlight=app.hl; app.makeHl=-1; makeView.o.highlight=-1; app.undo=[];
+  if(app.hl>=p.palette.length) app.hl=-1; stitchView.o.highlight=app.hl; app.makeHl=-1; makeView.o.highlight=-1; app.undo=[]; resetDrawHistory(); if(draw.color>=p.palette.length) draw.color=firstColor(p);
   $('#projName').value=p.name; settingsToUI(); $('#redrawBar').hidden=true;
-  if(sameSize){ makeView.p=p; stitchView.p=p; makeView.invalidate(); stitchView.invalidate(); } else { makeView.setProject(p); stitchView.setProject(p); }
+  if(sameSize){ makeView.p=p; stitchView.p=p; drawView.p=p; makeView.invalidate(); stitchView.invalidate(); drawView.invalidate(); } else { makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p); }
   refreshAll();
   if(!quiet) toast('Updated from your other device');
 }
@@ -1795,6 +2046,14 @@ function cloudDelete(id){ if(!cloud.col) return; clearTimeout(cloud.pushT[id]); 
 
 /* ---------- wire up ---------- */
 $('#homeBtn').onclick=showLibrary;
+$('#blankBtn').onclick=openBlankDialog;
+$$('#toolSeg button').forEach(b=>b.onclick=()=>setTool(b.dataset.v));
+$$('#brushSeg button').forEach(b=>b.onclick=()=>{ draw.size=+b.dataset.v; if(draw.tool==='fill'||draw.tool==='pick') draw.tool='pen'; updateDrawUI(); renderDrawPalette(); });
+$('#mirrorBtn').onclick=()=>{ draw.mirror=!draw.mirror; updateDrawUI(); drawView.draw(); toast(draw.mirror?'Mirror on: drawing is copied to the other side':'Mirror off'); };
+$('#dUndo').onclick=$('#dUndoM').onclick=undoDraw; $('#dRedo').onclick=$('#dRedoM').onclick=redoDraw;
+$('#dFit').onclick=()=>drawView.fit();
+$('#dZoomIn').onclick=()=>drawView.zoomCenter(1.4);
+$('#dZoomOut').onclick=()=>drawView.zoomCenter(1/1.4);
 $('#newBtn').onclick=()=>{ $('#picInput').dataset.mode='new'; $('#picInput').click(); };
 $('#cropBtn').onclick=recrop;
 $('#changePicBtn').onclick=()=>{ $('#picInput').dataset.mode='replace'; $('#picInput').click(); };
@@ -1806,8 +2065,8 @@ $('#saveBackupBtn').onclick=saveBackup;
 $('#projName').addEventListener('input',e=>{ if(!app.p) return; app.p.name=e.target.value.slice(0,60)||'Untitled pattern'; scheduleSave(); });
 $$('.tabbtn').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 
-$('#wIn').addEventListener('change',()=>{ const s=app.p.settings; const w=Math.max(4,Math.min(300,parseInt($('#wIn').value)||s.w)); $('#wIn').value=w; if(s.lock!==false && app.src){ $('#hIn').value=Math.max(4,Math.min(300,Math.round(w/cropRatio(app.src,s.crop)))); } onSettingChange(); });
-$('#hIn').addEventListener('change',()=>{ const s=app.p.settings; const h=Math.max(4,Math.min(300,parseInt($('#hIn').value)||s.h)); $('#hIn').value=h; if(s.lock!==false && app.src){ $('#wIn').value=Math.max(4,Math.min(300,Math.round(h*cropRatio(app.src,s.crop)))); } onSettingChange(); });
+$('#wIn').addEventListener('change',()=>{ const s=app.p.settings; const w=Math.max(4,Math.min(300,parseInt($('#wIn').value)||s.w)); $('#wIn').value=w; if(s.lock!==false && app.src){ $('#hIn').value=Math.max(4,Math.min(300,Math.round(w/cropRatio(app.src,s.crop)))); } else if(s.lock!==false){ $('#hIn').value=Math.max(4,Math.min(300,Math.round(w*app.p.h/app.p.w))); } onSettingChange(); });
+$('#hIn').addEventListener('change',()=>{ const s=app.p.settings; const h=Math.max(4,Math.min(300,parseInt($('#hIn').value)||s.h)); $('#hIn').value=h; if(s.lock!==false && app.src){ $('#wIn').value=Math.max(4,Math.min(300,Math.round(h*cropRatio(app.src,s.crop)))); } else if(s.lock!==false){ $('#wIn').value=Math.max(4,Math.min(300,Math.round(h*app.p.w/app.p.h))); } onSettingChange(); });
 $('#lockBtn').onclick=()=>{ const s=app.p.settings; s.lock = s.lock===false; $('#lockBtn').setAttribute('aria-pressed',String(s.lock)); if(s.lock) $('#wIn').dispatchEvent(new Event('change')); };
 $('#fabricIn').onchange=()=>{ app.p.settings.fabric=parseInt($('#fabricIn').value); updateSizeInfo(); scheduleSave(); };
 ['#colorsIn','#brightIn','#contrastIn','#satIn'].forEach(id=>{ $(id).addEventListener('input',()=>{ const o=id.replace('In','Out'); $(o).textContent=$(id).value; }); $(id).addEventListener('change',onSettingChange); });
@@ -1823,6 +2082,16 @@ $('#zoomInBtn').onclick=()=>stitchView.zoomCenter(1.4);
 $('#zoomOutBtn').onclick=()=>stitchView.zoomCenter(1/1.4);
 $('#viewBtn').onclick=()=>{ const i=(VIEW_MODES.findIndex(m=>m[0]===stitchView.o.mode)+1)%VIEW_MODES.length; stitchView.o.mode=VIEW_MODES[i][0]; $('#viewLbl').textContent = window.innerWidth<=860 ? VIEW_SHORT[VIEW_MODES[i][0]] : VIEW_MODES[i][1]; toast('Showing: '+VIEW_MODES[i][1].toLowerCase()); stitchView.invalidate(); };
 document.addEventListener('keydown',e=>{
+  if(app.p && app.tab==='draw' && !e.target.closest('input,select,textarea')){
+    const k=e.key.toLowerCase();
+    if((e.metaKey||e.ctrlKey) && k==='z'){ e.preventDefault(); e.shiftKey ? redoDraw() : undoDraw(); }
+    else if((e.metaKey||e.ctrlKey) && k==='y'){ e.preventDefault(); redoDraw(); }
+    else if(e.metaKey||e.ctrlKey||e.altKey) return;
+    else if(k==='b'||k==='p') setTool('pen'); else if(k==='e') setTool('erase'); else if(k==='g') setTool('fill'); else if(k==='i') setTool('pick');
+    else if(k==='m') $('#mirrorBtn').click(); else if(k==='f') drawView.fit();
+    else if(['1','2','3'].includes(k)){ draw.size=+k; updateDrawUI(); }
+    return;
+  }
   if(!app.p || app.tab!=='stitch' || e.target.closest('input,select,textarea')) return;
   if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); }
   else if(e.key==='m'){ setMarking(!stitchView.o.marking); }
