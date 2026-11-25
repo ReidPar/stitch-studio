@@ -69,6 +69,38 @@ main{flex:1;min-height:0;position:relative}
 .lib-foot{margin-top:40px;color:var(--muted);font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .linkbtn{border:0;background:none;padding:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-weight:600}
 
+/* Library tools, folders */
+.libhead{margin:44px 0 16px}
+.libhead h2{margin:0}
+.crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;min-height:36px}
+.crumbs .crumb{border:0;background:none;padding:0;font-family:'Alan Sans','DM Sans',system-ui,sans-serif;font-weight:600;font-size:24px;color:var(--muted)}
+.crumbs .crumb:hover{color:var(--ink)}
+.crumbs .sep{color:var(--muted);font-size:22px}
+.crumbs h2{font-family:'Alan Sans','DM Sans',system-ui,sans-serif;font-weight:600;font-size:24px}
+.libtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.libtools .search{flex:1;min-width:180px;max-width:320px;border-radius:999px;padding:9px 16px;background:#fff}
+.libtools .seg{flex:none}
+.libtools .seg button{padding:7px 14px}
+.foldergrid{margin-bottom:16px}
+.fcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;display:flex;align-items:center;gap:4px;padding:6px 6px 6px 0}
+.fcard .fopen{flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:0;background:none;padding:8px 6px 8px 14px;text-align:left}
+.fcard .ficon{width:40px;height:40px;flex:none;border-radius:11px;background:#F6E3D6;color:var(--thread);display:flex;align-items:center;justify-content:center}
+.fcard .ficon svg{width:22px;height:22px}
+.fcard .fname{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcard .fsub{color:var(--muted);font-size:13px;margin-top:2px}
+.pthumb{position:relative}
+.badge-done{position:absolute;left:10px;top:10px;display:flex;align-items:center;gap:4px;background:var(--sage);color:#fff;font-size:12px;font-weight:700;padding:4px 9px 4px 7px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.badge-done svg{width:13px;height:13px}
+.pfolder{display:inline-flex;align-items:center;gap:3px}
+.libempty{color:var(--muted);padding:30px 4px;text-align:center}
+.dialog .acts.stack{flex-direction:column;align-items:stretch}
+.dialog .acts.stack .btn{justify-content:flex-start;padding:11px 16px}
+.dialog .acts.stack .btn.danger{color:var(--thread)}
+.dialog .mextra input{width:100%;margin:-6px 0 18px}
+.pdone-pill{display:inline-flex;align-items:center;gap:4px;background:var(--sage);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:6px;vertical-align:1px}
+.coloracts{display:flex;gap:6px;flex:none}
+.coloracts .btn{padding:6px 12px;font-size:13px}
+
 /* Editor layouts */
 .split{flex:1;min-height:0;display:grid;grid-template-columns:1fr 400px}
 .stage{position:relative;min-height:0;min-width:0;background:var(--linen-2)}
@@ -269,7 +301,12 @@ details[open] summary::after{content:'–'}
   .toolbar .seg button{padding:8px 10px}
   .viewbtn{padding:8px 8px}
   .tsep{margin:0 2px}
-  .progress{padding:8px 12px}
+  .progress{padding:8px 12px;flex-wrap:wrap;gap:8px 12px}
+  .progress .ptext{flex:1 1 100%;order:0}
+  .coloracts{order:2}
+  .libtools .search{max-width:none;flex:1 1 100%}
+  .libtools .seg{flex:1}
+  .crumbs .crumb,.crumbs h2{font-size:21px}
   .drawbar{padding:6px 8px;gap:6px}
   .desk-only{display:none!important}
   .toast{bottom:96px}
@@ -325,8 +362,17 @@ details[open] summary::after{content:'–'}
         </div>
         <div class="hero-art"><canvas id="heroCanvas"></canvas></div>
       </div>
-      <h2 id="libHead" hidden>Your patterns</h2>
+      <div class="libhead" id="libHead" hidden>
+        <div class="crumbs" id="libCrumbs"></div>
+        <div class="libtools">
+          <input class="num search" id="libSearch" type="search" placeholder="Search patterns" aria-label="Search patterns">
+          <div class="seg" id="libFilter"><button data-v="all">All</button><button data-v="progress">In progress</button><button data-v="done">Finished</button></div>
+          <button class="btn ghost small" id="newFolderBtn">+ New folder</button>
+        </div>
+      </div>
+      <div class="libgrid foldergrid" id="folderGrid"></div>
       <div class="libgrid" id="libGrid"></div>
+      <div class="libempty" id="libEmpty" hidden></div>
       <div class="lib-foot">
         <span id="libSaveNote">Patterns and progress are saved on this device.</span>
         <button class="linkbtn" id="openBackupBtn">Open a backup file</button>
@@ -458,6 +504,10 @@ details[open] summary::after{content:'–'}
       <div class="progress">
         <div class="ptext" id="ptext"></div>
         <div class="pbar"><i id="pbar"></i></div>
+        <div class="coloracts" id="colorActs" hidden>
+          <button class="btn small accent" id="colorAllBtn">Mark all done</button>
+          <button class="btn small ghost" id="colorClearBtn">Clear</button>
+        </div>
       </div>
       <div class="stage stitch-stage">
         <canvas id="stitchCanvas"></canvas>
@@ -551,7 +601,7 @@ details[open] summary::after{content:'–'}
   <div class="row" style="margin-bottom:18px"><label class="field"><span>Width</span><input class="num" id="blankW" type="number" inputmode="numeric" min="4" max="300" value="30"></label><label class="field"><span>Height</span><input class="num" id="blankH" type="number" inputmode="numeric" min="4" max="300" value="30"></label></div>
   <div class="acts"><button class="btn small ghost" id="blankCancel">Cancel</button><button class="btn small accent" id="blankCreate">Create</button></div>
 </div></div>
-<div class="modal" id="modal" hidden><div class="dialog"><h4 id="mTitle"></h4><p id="mBody"></p><div class="acts" id="mActs"></div></div></div>
+<div class="modal" id="modal" hidden><div class="dialog"><h4 id="mTitle"></h4><p id="mBody"></p><div class="mextra" id="mExtra"></div><div class="acts" id="mActs"></div></div></div>
 <div class="working" id="working" hidden><span id="workingText">Working…</span></div>
 <div class="toast" id="toast"></div>
 <input type="file" id="picInput" accept="image/*" hidden>
@@ -818,14 +868,14 @@ function suggestions(p, counts){
 function serialize(p){
   return { v:1, app:APP_NAME, id:p.id, name:p.name, w:p.w, h:p.h, palette:p.palette,
     grid:bytesToB64(new Uint8Array(p.grid.buffer,p.grid.byteOffset,p.grid.byteLength)),
-    done:bytesToB64(p.done), settings:p.settings, edited:!!p.edited, src:p.src||null, created:p.created, updated:p.updated };
+    done:bytesToB64(p.done), settings:p.settings, edited:!!p.edited, src:p.src||null, created:p.created, updated:p.updated, folder:p.folder||null, completed:p.completed||null };
 }
 function deserialize(o){
   const gb=b64ToBytes(o.grid), grid=new Uint16Array(gb.buffer.slice(0));
   let done=o.done ? b64ToBytes(o.done) : new Uint8Array(o.w*o.h);
   if(done.length!==o.w*o.h) done=new Uint8Array(o.w*o.h);
   return { id:o.id, name:o.name||'Untitled pattern', w:o.w, h:o.h, palette:o.palette, grid, done,
-    settings:Object.assign(defaultSettings(o.w,o.h),o.settings||{}), edited:!!o.edited, src:o.src||null, created:o.created||Date.now(), updated:o.updated||Date.now() };
+    settings:Object.assign(defaultSettings(o.w,o.h),o.settings||{}), edited:!!o.edited, src:o.src||null, created:o.created||Date.now(), updated:o.updated||Date.now(), folder:o.folder||null, completed:o.completed||null };
 }
 function defaultSettings(iw, ih){
   const long=100; let w,h;
@@ -1197,12 +1247,25 @@ const fileSlug = s => (s||'pattern').toLowerCase().replace(/[^a-z0-9]+/g,'-').re
 /* ---------- UI helpers ---------- */
 let toastT=0;
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2800); }
-function dialog(title, body, buttons){
+function dialog(title, body, buttons, opts={}){
   return new Promise(res=>{
-    $('#mTitle').textContent=title; $('#mBody').textContent=body; const acts=$('#mActs'); acts.innerHTML='';
-    buttons.forEach(b=>{ const el=document.createElement('button'); el.className='btn small '+(b.primary?'accent':'ghost'); el.textContent=b.label; el.onclick=()=>{ $('#modal').hidden=true; res(b.value); }; acts.appendChild(el); });
+    $('#mTitle').textContent=title; $('#mBody').textContent=body; $('#mBody').hidden=!body; $('#mExtra').innerHTML='';
+    const acts=$('#mActs'); acts.innerHTML=''; acts.className='acts'+(opts.stack?' stack':'');
+    buttons.forEach(b=>{ const el=document.createElement('button'); el.className='btn small '+(b.primary?'accent':'ghost')+(b.danger?' danger':''); el.textContent=b.label; el.onclick=()=>{ $('#modal').hidden=true; res(typeof b.value==='function'?b.value():b.value); }; acts.appendChild(el); });
+    if(opts.extra) opts.extra($('#mExtra'), v=>{ $('#modal').hidden=true; res(v); });
     $('#modal').hidden=false;
   });
+}
+// A list of choices (menu)
+function sheet(title, items){ return dialog(title, '', [...items, {label:'Cancel', value:null}], {stack:true}); }
+// Ask for a short piece of text, e.g. a folder name
+function promptText(title, value, okLabel){
+  let inp;
+  return dialog(title, '', [{label:'Cancel',value:null},{label:okLabel||'Save',value:()=>inp.value.trim()||null,primary:true}], {extra:(box,done)=>{
+    inp=document.createElement('input'); inp.className='num'; inp.maxLength=40; inp.value=value||''; box.appendChild(inp);
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); done(inp.value.trim()||null); } });
+    setTimeout(()=>{ inp.focus(); inp.select(); },30);
+  }});
 }
 function working(on, text){ $('#working').hidden=!on; if(text) $('#workingText').textContent=text; }
 const nextFrame=()=>new Promise(r=>requestAnimationFrame(()=>setTimeout(r,16)));
@@ -1345,30 +1408,136 @@ function saveNow(){
 }
 function upsertIndex(p){
   const st=stats(p), idx=(store.get(idxKey())||[]).filter(e=>e.id!==p.id);
-  idx.push({id:p.id, name:p.name, updated:p.updated, w:p.w, h:p.h, colors:st.colors, pct:st.pct, thumb:thumbURL(p)});
+  idx.push({id:p.id, name:p.name, updated:p.updated, w:p.w, h:p.h, colors:st.colors, pct:st.pct, thumb:thumbURL(p), folder:p.folder||null, completed:p.completed||null});
   store.set(idxKey(), idx);
 }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden'){ saveNow(); flushPushes(); } });
 window.addEventListener('pagehide', saveNow);
 
 /* ---------- library ---------- */
+/* Folders: one level. Stored per account/device as {list:[{id,name}], updated}. */
+const foldersKey=()=>NS+'folders';
+function getFolders(){ const f=store.get(foldersKey()); return (f && f.list) || []; }
+function saveFolders(list){ const data={list, updated:Date.now()}; store.set(foldersKey(), data); pushFolders(); }
+const libState={ folder:null, filter:'all', q:'' };
+const ICON_FOLDER='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+const ICON_MORE='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>';
+const ICON_CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 function renderLibrary(){
-  const idx=(store.get(idxKey())||[]).sort((a,b)=>b.updated-a.updated), grid=$('#libGrid');
-  grid.innerHTML=''; $('#libHead').hidden=!idx.length;
-  idx.forEach(e=>{
+  const idx=(store.get(idxKey())||[]).sort((a,b)=>b.updated-a.updated);
+  const folders=getFolders(), fids=new Set(folders.map(f=>f.id));
+  if(libState.folder && !fids.has(libState.folder)) libState.folder=null;
+  const has = idx.length>0 || folders.length>0;
+  $('#libHead').hidden=!has;
+  setSeg('#libFilter', libState.filter);
+  if($('#libSearch').value!==libState.q) $('#libSearch').value=libState.q;
+  // breadcrumbs
+  const cr=$('#libCrumbs'); cr.innerHTML='';
+  if(libState.folder){
+    const f=folders.find(x=>x.id===libState.folder);
+    const back=document.createElement('button'); back.className='crumb'; back.textContent='Your patterns'; back.onclick=()=>{ libState.folder=null; renderLibrary(); };
+    const sep=document.createElement('span'); sep.className='sep'; sep.textContent='›';
+    const h=document.createElement('h2'); h.textContent=f.name;
+    const more=document.createElement('button'); more.className='icon-btn'; more.setAttribute('aria-label','Folder options'); more.innerHTML=ICON_MORE; more.onclick=()=>folderMenu(f);
+    cr.append(back,sep,h,more);
+  } else { const h=document.createElement('h2'); h.textContent='Your patterns'; cr.appendChild(h); }
+  $('#newFolderBtn').hidden=!!libState.folder;
+  // which patterns to show
+  const q=libState.q.trim().toLowerCase();
+  let list=idx.filter(e=>{
+    if(q) return (e.name||'').toLowerCase().includes(q);
+    const inFolder = e.folder && fids.has(e.folder) ? e.folder : null;
+    return libState.folder ? inFolder===libState.folder : !inFolder;
+  });
+  if(libState.filter==='progress') list=list.filter(e=>!e.completed);
+  if(libState.filter==='done') list=list.filter(e=>e.completed);
+  // folder cards (top level, not searching)
+  const fg=$('#folderGrid'); fg.innerHTML='';
+  if(!libState.folder && !q){
+    folders.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
+      const n=idx.filter(e=>e.folder===f.id).length, nd=idx.filter(e=>e.folder===f.id && e.completed).length;
+      const c=document.createElement('div'); c.className='fcard';
+      c.innerHTML=`<button class="fopen"><span class="ficon">${ICON_FOLDER}</span><span style="min-width:0"><div class="fname"></div><div class="fsub">${n} pattern${n===1?'':'s'}${nd?` · ${nd} finished`:''}</div></span></button><button class="icon-btn" aria-label="Folder options">${ICON_MORE}</button>`;
+      c.querySelector('.fname').textContent=f.name;
+      c.querySelector('.fopen').onclick=()=>{ libState.folder=f.id; renderLibrary(); $("#library").scrollTop=0; };
+      c.querySelector('.icon-btn').onclick=()=>folderMenu(f);
+      fg.appendChild(c);
+    });
+  }
+  fg.hidden=!fg.children.length;
+  // pattern cards
+  const grid=$('#libGrid'); grid.innerHTML='';
+  list.forEach(e=>{
     const card=document.createElement('div'); card.className='pcard';
-    card.innerHTML=`<button class="pthumb" aria-label="Open"><img alt=""></button><div class="pmeta"><div><div class="pname"></div><div class="psub"></div></div><button class="icon-btn" aria-label="Delete pattern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>`;
+    card.innerHTML=`<button class="pthumb" aria-label="Open"><img alt="">${e.completed?`<span class="badge-done">${ICON_CHECK}Finished</span>`:''}</button><div class="pmeta"><div><div class="pname"></div><div class="psub"></div></div><button class="icon-btn" aria-label="Pattern options">${ICON_MORE}</button></div>`;
     if(e.thumb) card.querySelector('img').src=e.thumb;
     card.querySelector('.pname').textContent=e.name;
-    card.querySelector('.psub').textContent=`${e.w}×${e.h} · ${e.colors} colors${e.pct?` · ${e.pct}% done`:''}`;
+    const fn = q && e.folder && fids.has(e.folder) ? ' · '+folders.find(f=>f.id===e.folder).name : '';
+    card.querySelector('.psub').textContent=`${e.w}×${e.h} · ${e.colors} colors${e.completed?'':(e.pct?` · ${e.pct}% done`:'')}${fn}`;
     card.querySelector('.pthumb').onclick=()=>openProject(e.id);
     card.querySelector('.pname').onclick=()=>openProject(e.id);
-    card.querySelector('.icon-btn').onclick=async()=>{
-      const v=await dialog('Delete this pattern?', `"${e.name}" and its stitch progress will be removed from this device.`, [{label:'Cancel',value:false},{label:'Delete',value:true,primary:true}]);
-      if(!v) return; store.del(pKey(e.id)); store.set(idxKey(),(store.get(idxKey())||[]).filter(x=>x.id!==e.id)); cloudDelete(e.id); renderLibrary();
-    };
+    card.querySelector('.icon-btn').onclick=()=>patternMenu(e);
     grid.appendChild(card);
   });
+  // empty states
+  const em=$('#libEmpty'); let msg='';
+  if(has && !list.length){
+    if(q) msg=`No patterns match "${libState.q.trim()}".`;
+    else if(libState.filter==='done') msg='No finished patterns here yet.';
+    else if(libState.filter==='progress') msg='Nothing in progress here.';
+    else if(libState.folder) msg='This folder is empty. Use a pattern’s ⋯ menu to move it here.';
+    else if(!folders.length) msg='';
+  }
+  em.textContent=msg; em.hidden=!msg;
+}
+// Change a saved pattern's details without opening it
+function updateSaved(id, fn){
+  if(app.p && app.p.id===id){ fn(app.p); saveNow(); return; }
+  const o=store.get(pKey(id)); if(!o) return;
+  fn(o); o.updated=Date.now(); store.set(pKey(id),o); upsertIndex(deserialize(o)); queuePush(id);
+}
+async function patternMenu(e){
+  const folders=getFolders();
+  const v=await sheet(e.name, [
+    {label:'Open', value:'open'},
+    {label: e.completed ? 'Mark as in progress' : 'Mark as finished', value:'toggle'},
+    {label:'Move to folder…', value:'move'},
+    {label:'Rename…', value:'rename'},
+    {label:'Duplicate', value:'dup'},
+    {label:'Delete…', value:'delete', danger:true},
+  ]);
+  if(v==='open') openProject(e.id);
+  else if(v==='toggle'){ updateSaved(e.id, o=>{ o.completed = e.completed ? null : Date.now(); }); toast(e.completed?'Marked as in progress':'Marked as finished'); renderLibrary(); }
+  else if(v==='rename'){ const n=await promptText('Rename pattern', e.name); if(n){ updateSaved(e.id, o=>{ o.name=n.slice(0,60); }); renderLibrary(); } }
+  else if(v==='dup'){ const o=store.get(pKey(e.id)); if(!o) return; const c=JSON.parse(JSON.stringify(o)); c.id=uid(); c.name=(o.name||'Pattern')+' copy'; c.created=c.updated=Date.now(); c.completed=null;
+    const d=b64ToBytes(c.done); d.fill(0); c.done=bytesToB64(d);
+    if(!store.set(pKey(c.id),c)){ c.src=null; if(!store.set(pKey(c.id),c)){ toast('Not enough space on this device to duplicate.'); return; } }
+    upsertIndex(deserialize(c)); queuePush(c.id); renderLibrary(); toast('Duplicated, with progress cleared'); }
+  else if(v==='move'){ moveToFolder([e.id]); }
+  else if(v==='delete'){
+    const ok=await dialog('Delete this pattern?', `"${e.name}" and its stitch progress will be deleted${cloud.user?' from your account':' from this device'}.`, [{label:'Cancel',value:false},{label:'Delete',value:true,primary:true}]);
+    if(!ok) return; store.del(pKey(e.id)); store.set(idxKey(),(store.get(idxKey())||[]).filter(x=>x.id!==e.id)); cloudDelete(e.id); renderLibrary();
+  }
+}
+async function moveToFolder(ids){
+  const folders=getFolders().slice().sort((a,b)=>a.name.localeCompare(b.name));
+  const items=[...folders.map(f=>({label:f.name, value:f.id})), {label:'No folder (Your patterns)', value:'__none'}, {label:'+ New folder…', value:'__new'}];
+  let v=await sheet('Move to folder', items); if(!v) return;
+  if(v==='__new'){ const n=await promptText('New folder', '', 'Create'); if(!n) return; const f={id:uid(), name:n}; saveFolders([...getFolders(), f]); v=f.id; }
+  const fid = v==='__none' ? null : v;
+  ids.forEach(id=>updateSaved(id, o=>{ o.folder=fid; }));
+  const name = fid ? getFolders().find(f=>f.id===fid).name : 'Your patterns';
+  toast(`Moved to ${name}`); renderLibrary();
+}
+async function folderMenu(f){
+  const v=await sheet(f.name, [{label:'Rename…', value:'rename'},{label:'Delete folder…', value:'delete', danger:true}]);
+  if(v==='rename'){ const n=await promptText('Rename folder', f.name); if(n){ saveFolders(getFolders().map(x=>x.id===f.id?{...x,name:n}:x)); renderLibrary(); } }
+  else if(v==='delete'){
+    const inside=(store.get(idxKey())||[]).filter(e=>e.folder===f.id);
+    const ok=await dialog(`Delete "${f.name}"?`, inside.length ? `The ${inside.length} pattern${inside.length>1?'s':''} inside will move back to Your patterns. No patterns are deleted.` : 'This folder is empty.', [{label:'Cancel',value:false},{label:'Delete folder',value:true,primary:true}]);
+    if(!ok) return; inside.forEach(e=>updateSaved(e.id, o=>{ o.folder=null; }));
+    saveFolders(getFolders().filter(x=>x.id!==f.id)); if(libState.folder===f.id) libState.folder=null; renderLibrary();
+  }
 }
 const HEART=[
   '..ddd...ddd..',
@@ -1444,7 +1613,7 @@ async function newFromFile(file){
     const settings=defaultSettings(src.width, src.height); settings.crop=crop;
     const info=applyCropSettings(settings, src, 100);
     const st=storeSource(src, crop, settings.pixel); settings.crop=st.crop;
-    const p={id:uid(), name:niceName(file.name), created:Date.now(), updated:Date.now(), settings, edited:false, src:st.url};
+    const p={id:uid(), name:niceName(file.name), created:Date.now(), updated:Date.now(), settings, edited:false, src:st.url, folder:libState.folder||null};
     const r=generatePattern(st.src, settings);
     Object.assign(p,{w:settings.w, h:settings.h, grid:r.grid, palette:r.palette, done:new Uint8Array(settings.w*settings.h)});
     const hid=autoHideBackground(p);
@@ -1485,7 +1654,7 @@ function showEditor(tab){
   $('#library').hidden=true; $('#editor').hidden=false; $('#tabs').hidden=false; $('#projName').hidden=false; $('#hdrSep').hidden=false;
   $('#homeBtn').classList.remove('home-only');
   $('#projName').value=p.name;
-  app.undo=[]; app.hl=-1; app.makeHl=-1; app.print.page=0; resetDrawHistory();
+  app.undo=[]; app.hl=-1; app.makeHl=-1; app.print.page=0; resetDrawHistory(); lastPct=stats(p).pct===100?100:-1;
   draw.color=firstColor(p);
   stitchView.o.highlight=-1; makeView.o.highlight=-1;
   settingsToUI();
@@ -1771,7 +1940,7 @@ function openBlankDialog(){
 }
 function createBlank(w,h){
   const s=defaultSettings(w,h); Object.assign(s,{w,h,blank:true,pixel:true,cleanup:'off'});
-  const p={id:uid(), name:'New design', created:Date.now(), updated:Date.now(), settings:s, edited:true, src:null, w, h,
+  const p={id:uid(), name:'New design', created:Date.now(), updated:Date.now(), settings:s, edited:true, src:null, w, h, folder:libState.folder||null,
     grid:new Uint16Array(w*h).fill(EMPTY), done:new Uint8Array(w*h), palette:STARTER.map((rgb,i)=>({rgb, sym:SYMBOLS[i], label:'', skip:false}))};
   app.p=p; app.src=null; draw.tool='pen'; draw.size=1; draw.mirror=false;
   saveNow(); showEditor('draw'); draw.color=2; renderDrawPalette();
@@ -1793,17 +1962,35 @@ function renderChips(){
   });
 }
 function setHighlight(i){ app.hl=i; stitchView.o.highlight=i; stitchView.invalidate(); renderChips(); updateProgress(); }
+// Mark (or clear) every stitch of the highlighted color at once. Undo-able like a normal stroke.
+function markColor(value){
+  const p=app.p, c=app.hl; if(!p || c<0) return;
+  const cells=[]; for(let i=0;i<p.grid.length;i++) if(p.grid[i]===c && p.done[i]!==value){ p.done[i]=value; cells.push(i); }
+  if(!cells.length){ toast(value?'All of this color is already done':'Nothing to clear'); return; }
+  onStroke({value, cells});
+  toast(`${value?'Marked':'Cleared'} ${cells.length.toLocaleString()} stitch${cells.length>1?'es':''}. Undo if that was a mistake.`);
+}
 function updateProgress(){
   const p=app.p; if(!p) return; const st=stats(p);
   let txt=`${st.done.toLocaleString()} of ${st.total.toLocaleString()} stitches <span>· ${st.pct}%</span>`;
   if(app.hl>=0){ const c=p.palette[app.hl]; const left=st.counts[app.hl]-st.doneCounts[app.hl]; txt=`${escapeHtml(c.label||'Color '+(app.hl+1))}: ${left.toLocaleString()} left <span>· ${st.pct}% overall</span>`; }
+  if(p.completed && app.hl<0) txt=`<span class="pdone-pill">${ICON_CHECK.replace('<svg','<svg width="12" height="12"')}Finished</span> ${st.done.toLocaleString()} of ${st.total.toLocaleString()} stitches`;
   $('#ptext').innerHTML=txt; $('#pbar').style.width=st.pct+'%';
+  const ca=$('#colorActs'); ca.hidden = app.hl<0;
+  if(app.hl>=0){ const left=st.counts[app.hl]-st.doneCounts[app.hl]; $('#colorAllBtn').disabled=left===0; $('#colorClearBtn').disabled=st.doneCounts[app.hl]===0; }
 }
 let lastPct=-1;
 function onStroke(st){
   app.undo.push(st); if(app.undo.length>200) app.undo.shift();
   stitchView.invalidate(); renderChips(); updateProgress(); scheduleSave();
-  const s=stats(app.p); if(s.total && s.done===s.total && lastPct!==100) toast('Every stitch is done. Beautiful work!'); lastPct = s.done===s.total?100:s.pct;
+  const s=stats(app.p), p=app.p;
+  if(s.total && s.done===s.total && lastPct!==100 && !p.completed) askFinished();
+  lastPct = s.done===s.total?100:s.pct;
+}
+async function askFinished(){
+  const p=app.p;
+  const v=await dialog('Every stitch is done!', 'Beautiful work. Mark this pattern as finished? Finished patterns get a badge and their own filter in your library.', [{label:'Not yet',value:false},{label:'Mark as finished',value:true,primary:true}]);
+  if(v && app.p===p){ p.completed=Date.now(); saveNow(); updateProgress(); toast('Marked as finished'); }
 }
 function undo(){
   const st=app.undo.pop(); if(!st){ toast('Nothing to undo'); return; }
@@ -1909,7 +2096,7 @@ async function initCloud(){
 function useNamespace(ns){
   if(NS===ns) { if(!$('#library').hidden) renderLibrary(); return; }
   if(app.p){ saveNow(); app.p=null; app.src=null; }
-  NS=ns; showLibrary();
+  NS=ns; libState.folder=null; libState.q=''; showLibrary();
 }
 function deviceIndex(){ try{ return JSON.parse(localStorage.getItem(DEVICE_NS+'index'))||[]; }catch(e){ return []; } }
 // Patterns made while signed out stay on the device. On sign-in, offer to move them into the account.
@@ -1926,6 +2113,7 @@ async function offerDeviceMove(){
     localStorage.removeItem(DEVICE_NS+'p:'+e.id);
   }
   localStorage.removeItem(DEVICE_NS+'index');
+  try{ const df=JSON.parse(localStorage.getItem(DEVICE_NS+'folders')); if(df && df.list && df.list.length){ const cur=getFolders(), ids=new Set(cur.map(f=>f.id)); saveFolders([...cur, ...df.list.filter(f=>!ids.has(f.id))]); } localStorage.removeItem(DEVICE_NS+'folders'); }catch(_){}
   renderLibrary(); toast(`Added to your account`);
 }
 // On sign-out, remove the account's copies from this device (they stay safe in the account).
@@ -1978,8 +2166,16 @@ async function acctClick(){
     working(false); toast('Signed out');
   }
 }
+function metaDoc(){ return firebase.firestore().collection('users').doc(cloud.user.uid).collection('meta').doc('folders'); }
+function pushFolders(){ if(!cloud.col || !cloud.user) return; const d=store.get(foldersKey()); if(!d) return; metaDoc().set({list:d.list||[], updated:d.updated||Date.now()}).catch(e=>console.warn('Folder sync failed',e)); }
 function startSync(){
   stopSync();
+  cloud.unsubMeta=metaDoc().onSnapshot(d=>{
+    if(d.metadata && d.metadata.hasPendingWrites) return;
+    const r=d.exists ? d.data() : null, l=store.get(foldersKey());
+    if(r && (!l || (r.updated||0)>(l.updated||0))){ store.set(foldersKey(), {list:r.list||[], updated:r.updated||0}); if(!$('#library').hidden) renderLibrary(); }
+    else if(l && (!r || (l.updated||0)>(r.updated||0))) pushFolders();
+  }, err=>console.warn('Folder sync error', err));
   cloud.col=firebase.firestore().collection('users').doc(cloud.user.uid).collection('patterns');
   setCloudStatus('syncing'); let first=true;
   cloud.unsub=cloud.col.onSnapshot(snap=>{
@@ -1988,7 +2184,7 @@ function startSync(){
     if(cloud.status!=='syncing' || !Object.keys(cloud.pushT).length) setCloudStatus(navigator.onLine===false?'offline':'synced');
   }, err=>{ console.warn('Sync error', err); setCloudStatus('error'); });
 }
-function stopSync(){ if(cloud.unsub){ cloud.unsub(); cloud.unsub=null; } cloud.col=null; }
+function stopSync(){ if(cloud.unsub){ cloud.unsub(); cloud.unsub=null; } if(cloud.unsubMeta){ cloud.unsubMeta(); cloud.unsubMeta=null; } cloud.col=null; }
 function localUpdated(id){ const e=(store.get(idxKey())||[]).find(x=>x.id===id); return e ? (e.updated||0) : -1; }
 function initialMerge(remote){
   const idx=store.get(idxKey())||[];
@@ -2074,6 +2270,11 @@ $$('#cleanupSeg button').forEach(b=>b.onclick=()=>{ app.p.settings.cleanup=b.dat
 $('#redrawBtn').onclick=()=>regenerate(true);
 $('#pixelIn').onchange=()=>{ const s=app.p.settings; s.pixel=$('#pixelIn').checked; if(s.pixel){ s.cleanup='off'; setSeg('#cleanupSeg','off'); } updateMatchRow(); onSettingChange(); };
 
+$('#colorAllBtn').onclick=()=>markColor(1);
+$('#colorClearBtn').onclick=()=>markColor(0);
+$('#libSearch').addEventListener('input',e=>{ libState.q=e.target.value; renderLibrary(); });
+$$('#libFilter button').forEach(b=>b.onclick=()=>{ libState.filter=b.dataset.v; renderLibrary(); });
+$('#newFolderBtn').onclick=async()=>{ const n=await promptText('New folder', '', 'Create'); if(!n) return; saveFolders([...getFolders(), {id:uid(), name:n}]); renderLibrary(); };
 $('#moveBtn').onclick=()=>setMarking(false);
 $('#markBtn').onclick=()=>setMarking(true);
 $('#undoBtn').onclick=undo;
