@@ -195,6 +195,7 @@ details[open] summary::after{content:'–'}
 .drawbar::-webkit-scrollbar{display:none}
 .drawbar .seg button{display:flex;align-items:center;gap:6px;padding:7px 12px}
 .drawbar .seg button svg{width:18px;height:18px;flex:none}
+.shpico{display:flex}
 .drawbar .seg.sizes button{padding:7px 10px;min-width:36px;justify-content:center}
 .drawbar .seg.sizes i{display:block;background:currentColor;border-radius:2px}
 .togglebtn{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:11px;padding:7px 12px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap;flex:none}
@@ -216,6 +217,48 @@ details[open] summary::after{content:'–'}
 .blank-presets button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 4px;font-weight:600;font-size:14px}
 .blank-presets button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Shapes, selection, canvas size, shortcuts, share */
+.shapepop{position:absolute;left:12px;top:10px;z-index:5;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 10px 30px rgba(60,40,20,.18);display:flex;flex-direction:column;gap:8px}
+.shapepop .row1{display:flex;gap:4px}
+.shapepop .row1 button{width:44px;height:40px;border:1px solid transparent;border-radius:10px;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.shapepop .row1 button svg{width:22px;height:22px}
+.shapepop .row1 button[aria-pressed="true"]{background:var(--linen-2);border-color:var(--ink)}
+.shapepop .seg button{padding:6px 10px;font-size:13px}
+.selbar{position:absolute;left:50%;bottom:68px;transform:translateX(-50%);z-index:4;display:flex;gap:4px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:0 6px 20px rgba(60,40,20,.14)}
+.selbar button{border:0;background:transparent;border-radius:999px;padding:7px 12px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.selbar button:hover{background:var(--linen-2)}
+.selbar button svg{width:16px;height:16px}
+.selbar .danger{color:var(--thread)}
+.stage-undo{position:absolute;right:12px;top:12px;display:flex;gap:4px;background:rgba(255,253,248,.95);border:1px solid var(--line);border-radius:999px;padding:3px}
+.stage-undo .icon-btn{border-radius:999px;width:34px;height:34px}
+.stage-undo .icon-btn:disabled{opacity:.35;cursor:default}
+.canvasrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.canvasrow b{font-weight:600}
+.cs-grid{display:grid;grid-template-columns:1fr 150px;gap:16px;align-items:start;margin-bottom:16px}
+.cs-prev{width:100%;height:150px;background:var(--linen-2);border-radius:12px;display:block}
+.anchor{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:150px}
+.anchor button{height:40px;border:1px solid var(--line);background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.anchor button i{width:10px;height:10px;border-radius:2px;background:var(--line)}
+.anchor button[aria-pressed="true"]{border-color:var(--ink)}
+.anchor button[aria-pressed="true"] i{background:var(--ink);width:14px;height:14px}
+.dialog.wide{max-width:480px}
+.kbd-table{width:100%;border-collapse:collapse;font-size:14px;margin:-4px 0 16px}
+.kbd-table td{padding:5px 0;vertical-align:top;color:var(--ink)}
+.kbd-table td:first-child{width:50%;color:var(--muted);padding-right:12px}
+.kbd-table td:last-child{white-space:nowrap}
+.kbd-table th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px 0 4px}
+kbd{display:inline-block;font:600 12px 'DM Sans',system-ui,sans-serif;background:var(--linen);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;margin-right:2px}
+.dialog .scrollbox{max-height:58vh;overflow:auto;margin:-6px -4px 12px;padding:0 4px}
+.kbbtn{border:1px solid var(--line);background:#fff;border-radius:999px;width:38px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none}
+.kbbtn:hover{border-color:var(--ink);color:var(--ink)}
+.kbbtn svg{width:20px;height:20px}
+@media (pointer:coarse){ .kbbtn{display:none} }
+.share-box{display:flex;flex-direction:column;align-items:center;gap:12px;margin:-4px 0 16px}
+.share-box canvas{width:200px;height:200px;image-rendering:pixelated;border-radius:12px;background:#fff;padding:10px;border:1px solid var(--line)}
+.share-link{display:flex;gap:6px;width:100%}
+.share-link input{flex:1;min-width:0;font-size:13px}
+.import-prev{display:block;max-width:100%;max-height:220px;margin:-4px auto 16px;image-rendering:pixelated;border-radius:8px;box-shadow:0 2px 10px rgba(60,40,20,.15)}
 
 /* Print */
 .pagenav{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:4px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:0 6px 20px rgba(60,40,20,.12)}
@@ -308,10 +351,13 @@ details[open] summary::after{content:'–'}
   .libtools .seg{flex:1}
   .crumbs .crumb,.crumbs h2{font-size:21px}
   .drawbar{padding:6px 8px;gap:6px}
+  .cs-grid{grid-template-columns:1fr}
+  .selbar button span{display:none}
   .desk-only{display:none!important}
   .toast{bottom:96px}
   .mob-only{display:flex!important}
-  .drawbar .seg.tools button span,.togglebtn span{display:none}
+  .drawbar .seg.tools button span:not(.shpico),.togglebtn span{display:none}
+  .shpico{display:flex}
   .drawbar .seg button{padding:7px 9px}
   .togglebtn{padding:7px 9px}
   .tabbtn{padding:6px 12px}
@@ -334,6 +380,7 @@ details[open] summary::after{content:'–'}
   <div class="hdr-sep" id="hdrSep" hidden></div>
   <input class="proj-name" id="projName" aria-label="Pattern name" hidden>
   <div class="hdr-spacer"></div>
+  <button class="kbbtn" id="kbBtn" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M7 14h10"/></svg></button>
   <button class="acct" id="acctBtn" hidden></button>
 </header>
 
@@ -389,11 +436,15 @@ details[open] summary::after{content:'–'}
         <div class="stage">
           <canvas id="makeCanvas"></canvas>
           <div class="stage-stats" id="stageStats"></div>
+          <div class="stage-undo">
+            <button class="icon-btn" id="mUndo" title="Undo (Cmd+Z)" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+            <button class="icon-btn" id="mRedo" title="Redo (Shift+Cmd+Z)" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+          </div>
           <div class="busy" id="busy" hidden><span>Drawing your pattern…</span></div>
         </div>
         <aside class="panel">
           <div class="redraw" id="redrawBar" hidden>
-            <p>Redrawing with new settings will reset your color names, merges and stitch progress.</p>
+            <p>Redrawing with new settings replaces your drawing, color changes and stitch progress. You can undo it afterward.</p>
             <button class="btn small accent" id="redrawBtn">Redraw pattern</button>
           </div>
 
@@ -411,7 +462,8 @@ details[open] summary::after{content:'–'}
 
           <div class="card">
             <h3>Size</h3>
-            <div class="row">
+            <div class="canvasrow" id="canvasOnlyRow" hidden><span>Canvas: <b id="canvasDims"></b> stitches</span><button class="btn ghost small" id="canvasBtn1">Canvas size…</button></div>
+            <div class="row" id="scaleRow">
               <label class="field"><span>Width (stitches)</span><input class="num" id="wIn" type="number" inputmode="numeric" min="4" max="300"></label>
               <button class="lock" id="lockBtn" aria-pressed="true" title="Keep picture proportions" aria-label="Keep picture proportions">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
@@ -422,6 +474,7 @@ details[open] summary::after{content:'–'}
               <label class="switch"><input type="checkbox" id="pixelIn"><span></span></label>
               <div style="flex:1"><b style="font-size:14px">Pixel art</b><div class="note">Keeps hard edges and exact colors. Best for video game sprites.</div></div>
             </div>
+            <div class="row pic-only canvasrow" style="margin-top:12px"><span class="note">Add or trim stitches around the edges without resizing the picture.</span><button class="btn ghost small" id="canvasBtn2">Canvas size…</button></div>
             <div class="row" id="matchRow" hidden><button class="btn ghost small" id="matchPxBtn">Use 1 stitch per pixel</button><span class="note" id="matchNote"></span></div>
             <div class="row">
               <label class="field"><span>Fabric</span>
@@ -472,6 +525,8 @@ details[open] summary::after{content:'–'}
         <div class="seg tools" id="toolSeg">
           <button data-v="pen" title="Pen (B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg><span>Pen</span></button>
           <button data-v="erase" title="Eraser (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20h11"/><path d="M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L11 19H8z"/><path d="M9 11l4.5 4.5"/></svg><span>Eraser</span></button>
+          <button data-v="shape" id="shapeToolBtn" title="Shapes (U) · L line, R rectangle, O oval, H heart"><span class="shpico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="1"/></svg></span><span>Shapes</span></button>
+          <button data-v="select" title="Select and move (V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="3 3"><rect x="4" y="4" width="16" height="16" rx="1"/></svg><span>Select</span></button>
           <button data-v="fill" title="Fill (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l7-7 7 7-7 7z"/><path d="M4 12h14"/><path d="M20 15s2 2.4 2 3.8a2 2 0 0 1-4 0C18 17.4 20 15 20 15z"/></svg><span>Fill</span></button>
           <button data-v="pick" title="Pick a color (I)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4l5 5-2.5 2.5-5-5z"/><path d="M13.5 7.5L5 16v3h3l8.5-8.5"/></svg><span>Pick</span></button>
         </div>
@@ -487,6 +542,21 @@ details[open] summary::after{content:'–'}
       </div>
       <div class="stage stitch-stage">
         <canvas id="drawCanvas"></canvas>
+        <div class="shapepop" id="shapePop" hidden>
+          <div class="row1" id="shapeSeg">
+            <button data-v="line" title="Line (L)" aria-label="Line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19L19 5"/></svg></button>
+            <button data-v="rect" title="Rectangle (R)" aria-label="Rectangle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="1"/></svg></button>
+            <button data-v="oval" title="Oval (O)" aria-label="Oval"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><ellipse cx="12" cy="12" rx="8.5" ry="6.5"/></svg></button>
+            <button data-v="heart" title="Heart (H)" aria-label="Heart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg></button>
+          </div>
+          <div class="seg" id="fillSeg"><button data-v="outline">Outline</button><button data-v="filled">Filled</button></div>
+        </div>
+        <div class="selbar" id="selBar" hidden>
+          <button id="selDup" title="Duplicate (D)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg><span>Duplicate</span></button>
+          <button id="selFlip" title="Flip left/right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M8 7L3 12l5 5zM16 7l5 5-5 5z"/></svg><span>Flip</span></button>
+          <button id="selDel" class="danger" title="Delete (Delete key)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg><span>Delete</span></button>
+          <button id="selDone" title="Done (Esc)">Done</button>
+        </div>
         <div class="markhint" id="drawHint" style="opacity:0">One finger draws · two fingers move and zoom</div>
         <div class="toolbar">
           <button class="icon-btn zoombtn" id="dZoomOut" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
@@ -560,6 +630,11 @@ details[open] summary::after{content:'–'}
             <button class="btn accent" id="pdfBtn" style="width:100%">Download PDF</button>
             <div class="note" style="margin-top:10px">Includes a cover page with a color picture, a page map and the color key.</div>
           </div>
+          <div class="card" id="shareCard" hidden>
+            <h3>Share this design</h3>
+            <div class="note" style="margin-bottom:12px">Send a link or QR code. Anyone who opens it gets their own copy of the design, without your stitch progress.</div>
+            <button class="btn ghost small" id="shareBtn">Share design…</button>
+          </div>
           <div class="card">
             <h3>Switching devices</h3>
             <div class="note" id="syncNote" style="margin:-4px 0 12px" hidden></div>
@@ -594,6 +669,19 @@ details[open] summary::after{content:'–'}
     <div class="right"><button class="btn ghost" id="cropCancel">Cancel</button><button class="btn accent" id="cropDone">Done</button></div>
   </div>
 </div>
+<div class="modal" id="canvasModal" hidden><div class="dialog wide">
+  <h4>Canvas size</h4>
+  <p style="margin-bottom:14px">Add or trim stitches around the edges. Pick which side your design stays anchored to.</p>
+  <div class="cs-grid">
+    <div>
+      <div class="row" style="margin-bottom:12px"><label class="field"><span>Width</span><input class="num" id="csW" type="number" inputmode="numeric" min="4" max="300"></label><label class="field"><span>Height</span><input class="num" id="csH" type="number" inputmode="numeric" min="4" max="300"></label></div>
+      <canvas class="cs-prev" id="csPrev"></canvas>
+      <div class="note" id="csNote" style="margin-top:8px"></div>
+    </div>
+    <div><div class="note" style="margin-bottom:6px">Anchor</div><div class="anchor" id="csAnchor"></div></div>
+  </div>
+  <div class="acts"><button class="btn small ghost" id="csCancel">Cancel</button><button class="btn small accent" id="csApply">Apply</button></div>
+</div></div>
 <div class="modal" id="blankModal" hidden><div class="dialog">
   <h4>Start from scratch</h4>
   <p style="margin-bottom:14px">Pick a canvas size in stitches. You can change it later on the Make tab.</p>
@@ -607,6 +695,2307 @@ details[open] summary::after{content:'–'}
 <input type="file" id="picInput" accept="image/*" hidden>
 <input type="file" id="backupInput" accept=".json,application/json" hidden>
 
+<script>
+/* QR Code Generator for JavaScript, (c) 2009 Kazuhiko Arase, MIT license */
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
 <script>
 'use strict';
 /* =========================================================
@@ -942,7 +3331,7 @@ class ChartView{
         const cell=this.cellAt(pt.x,pt.y);
         if(cell){ const i=cell.r*this.p.w+cell.c; if(this.stitchable(i)){ this.stroke={value:this.p.done[i]?0:1, cells:[], last:cell}; this.paint(cell.c,cell.r); this.draw(); } }
       } else if(this.o.drawing && e.button!==1 && e.button!==2){
-        const cell=this.cellAt(pt.x,pt.y);
+        const cell=this.cellAt(pt.x,pt.y) || (this.o.drawAnywhere && this.o.drawAnywhere() ? this.cellAt(pt.x,pt.y,true) : null);
         if(cell && this.o.onDrawStart(cell)){ this.dstroke={last:cell}; this.draw(); }
       }
     } else if(this.ptrs.size===2){
@@ -966,7 +3355,8 @@ class ChartView{
       this.stroke.last=cell; this.draw();
     } else if(this.dstroke){
       const cell=this.cellAt(pt.x,pt.y,true), a=this.dstroke.last;
-      if(cell.c!==a.c || cell.r!==a.r){
+      if(this.o.onDrawDrag && this.o.onDrawDrag(cell, e)){ this.dstroke.last=cell; this.bmpDirty=true; this.draw(); }
+      else if(cell.c!==a.c || cell.r!==a.r){
         let x0=a.c,y0=a.r; const x1=cell.c,y1=cell.r, dx=Math.abs(x1-x0), dy=-Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx+dy;
         for(;;){ const e2=2*err; if(e2>=dy){err+=dy;x0+=sx;} if(e2<=dx){err+=dx;y0+=sy;} this.o.onDrawMove(x0,y0); if(x0===x1&&y0===y1) break; }
         this.dstroke.last=cell; this.bmpDirty=true; this.draw();
@@ -1250,7 +3640,7 @@ function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('sh
 function dialog(title, body, buttons, opts={}){
   return new Promise(res=>{
     $('#mTitle').textContent=title; $('#mBody').textContent=body; $('#mBody').hidden=!body; $('#mExtra').innerHTML='';
-    const acts=$('#mActs'); acts.innerHTML=''; acts.className='acts'+(opts.stack?' stack':'');
+    const acts=$('#mActs'); acts.innerHTML=''; acts.className='acts'+(opts.stack?' stack':''); $('#modal .dialog').classList.toggle('wide', !!opts.wide);
     buttons.forEach(b=>{ const el=document.createElement('button'); el.className='btn small '+(b.primary?'accent':'ghost')+(b.danger?' danger':''); el.textContent=b.label; el.onclick=()=>{ $('#modal').hidden=true; res(typeof b.value==='function'?b.value():b.value); }; acts.appendChild(el); });
     if(opts.extra) opts.extra($('#mExtra'), v=>{ $('#modal').hidden=true; res(v); });
     $('#modal').hidden=false;
@@ -1504,6 +3894,7 @@ async function patternMenu(e){
     {label:'Move to folder…', value:'move'},
     {label:'Rename…', value:'rename'},
     {label:'Duplicate', value:'dup'},
+    ...(cloud.ready ? [{label:'Share design…', value:'share'}] : []),
     {label:'Delete…', value:'delete', danger:true},
   ]);
   if(v==='open') openProject(e.id);
@@ -1514,6 +3905,7 @@ async function patternMenu(e){
     if(!store.set(pKey(c.id),c)){ c.src=null; if(!store.set(pKey(c.id),c)){ toast('Not enough space on this device to duplicate.'); return; } }
     upsertIndex(deserialize(c)); queuePush(c.id); renderLibrary(); toast('Duplicated, with progress cleared'); }
   else if(v==='move'){ moveToFolder([e.id]); }
+  else if(v==='share'){ shareDesign(e.id); }
   else if(v==='delete'){
     const ok=await dialog('Delete this pattern?', `"${e.name}" and its stitch progress will be deleted${cloud.user?' from your account':' from this device'}.`, [{label:'Cancel',value:false},{label:'Delete',value:true,primary:true}]);
     if(!ok) return; store.del(pKey(e.id)); store.set(idxKey(),(store.get(idxKey())||[]).filter(x=>x.id!==e.id)); cloudDelete(e.id); renderLibrary();
@@ -1624,7 +4016,8 @@ async function newFromFile(file){
 }
 async function replacePicture(file){
   const p=app.p;
-  if(p.edited){ const v=await dialog('Use a new picture?','This redraws the pattern and resets your color names, merges and stitch progress.',[{label:'Cancel',value:false},{label:'Use new picture',value:true,primary:true}]); if(!v) return; }
+  if(p.edited){ const v=await dialog('Use a new picture?','This redraws the pattern from the new picture, replacing your drawing, color changes and progress. You can undo it.',[{label:'Cancel',value:false},{label:'Use new picture',value:true,primary:true}]); if(!v) return; }
+  const before=snapshot();
   let src;
   try{ src=await readPicture(file); }catch(e){ toast(e.message||'Something went wrong reading that picture.'); return; }
   const crop=await openCropper(src,null); if(!crop) return;
@@ -1633,7 +4026,7 @@ async function replacePicture(file){
     await nextFrame();
     const s=p.settings; s.crop=crop; s.lock=true; s.blank=false; const info=applyCropSettings(s, src);
     const st=storeSource(src, crop, s.pixel); s.crop=st.crop;
-    app.src=st.src; p.src=st.url; settingsToUI(); await regenerate(true);
+    app.src=st.src; p.src=st.url; settingsToUI(); await regenerate(true, before);
     if(info.pixel) toast('Pixel art detected: 1 stitch per pixel');
   }catch(e){ toast(e.message||'Something went wrong reading that picture.'); }
   finally{ working(false); }
@@ -1641,10 +4034,11 @@ async function replacePicture(file){
 
 async function recrop(){
   const p=app.p; if(!app.src) return;
-  if(p.edited){ const v=await dialog('Crop the picture again?','This redraws the pattern and resets your color names, merges and stitch progress.',[{label:'Cancel',value:false},{label:'Crop',value:true,primary:true}]); if(!v) return; }
+  if(p.edited){ const v=await dialog('Crop the picture again?','This redraws the pattern, replacing your drawing, color changes and progress. You can undo it.',[{label:'Cancel',value:false},{label:'Crop',value:true,primary:true}]); if(!v) return; }
   const crop=await openCropper(app.src, p.settings.crop); if(!crop) return;
+  const before=snapshot();
   const s=p.settings; s.crop=crop; s.lock=true; const info=applyCropSettings(s, app.src);
-  settingsToUI(); await regenerate(true);
+  settingsToUI(); await regenerate(true, before);
   if(info.pixel) toast('Pixel art detected: 1 stitch per pixel');
 }
 
@@ -1654,7 +4048,7 @@ function showEditor(tab){
   $('#library').hidden=true; $('#editor').hidden=false; $('#tabs').hidden=false; $('#projName').hidden=false; $('#hdrSep').hidden=false;
   $('#homeBtn').classList.remove('home-only');
   $('#projName').value=p.name;
-  app.undo=[]; app.hl=-1; app.makeHl=-1; app.print.page=0; resetDrawHistory(); lastPct=stats(p).pct===100?100:-1;
+  app.undo=[]; app.hl=-1; app.makeHl=-1; app.print.page=0; resetDrawHistory(); app.settingsBase=JSON.parse(JSON.stringify(p.settings)); lastPct=stats(p).pct===100?100:-1;
   draw.color=firstColor(p);
   stitchView.o.highlight=-1; makeView.o.highlight=-1;
   settingsToUI();
@@ -1696,6 +4090,7 @@ function settingsToUI(){
   else if(app.p.src){ th.src=app.p.src; th.hidden=false; } else th.hidden=true;
   $('#cropBtn').disabled=!has; $('#cropBtn').hidden=!has;
   $$('.pic-only').forEach(el=>el.hidden=!has);
+  $('#scaleRow').hidden=!has; $('#canvasOnlyRow').hidden=has; $('#canvasDims').textContent=`${app.p.w} × ${app.p.h}`;
   updateTrimNote();
   $('#picNote').textContent = has ? 'The picture this pattern is made from.' : s.blank ? 'Drawn from scratch. Add a picture any time.' : "The original picture wasn't kept, so colors can't be redrawn from it. Size changes add or trim stitches at the edges.";
   $('#changePicBtn').textContent = (has || app.p.src) ? 'Change' : 'Add picture';
@@ -1727,7 +4122,7 @@ function updateSizeInfo(){
 let regenT=0;
 function onSettingChange(){
   const p=app.p, s=p.settings;
-  if(!app.src){ return resizeFromInputs(); }
+  if(!app.src){ return; }
   s.w=Math.max(4,Math.min(300,parseInt($('#wIn').value)||s.w));
   s.h=Math.max(4,Math.min(300,parseInt($('#hIn').value)||s.h));
   s.colors=parseInt($('#colorsIn').value); s.bright=parseInt($('#brightIn').value); s.contrast=parseInt($('#contrastIn').value); s.sat=parseInt($('#satIn').value);
@@ -1736,17 +4131,18 @@ function onSettingChange(){
   if(p.edited){ $('#redrawBar').hidden=false; return; }
   clearTimeout(regenT); regenT=setTimeout(()=>regenerate(false),280);
 }
-async function regenerate(force){
+async function regenerate(force, before){
   const p=app.p; if(!app.src || !p) return;
+  if(!before && p.grid){ before=snapshot(); if(app.settingsBase) before.settings=JSON.parse(JSON.stringify(app.settingsBase)); }
   $('#busy').hidden=false; await nextFrame();
   const s=p.settings, r=generatePattern(app.src, s);
   const sizeChanged = p.w!==s.w || p.h!==s.h;
   Object.assign(p,{w:s.w, h:s.h, grid:r.grid, palette:r.palette, done:new Uint8Array(s.w*s.h), edited:false});
   autoHideBackground(p);
-  app.undo=[]; app.hl=-1; app.makeHl=-1; stitchView.o.highlight=-1; makeView.o.highlight=-1; resetDrawHistory(); draw.color=firstColor(p);
+  app.undo=[]; app.hl=-1; app.makeHl=-1; stitchView.o.highlight=-1; makeView.o.highlight=-1; draw.sel=null; draw.color=firstColor(p);
   $('#redrawBar').hidden=true; $('#busy').hidden=true;
   if(sizeChanged || force){ makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p); } else { makeView.p=p; stitchView.p=p; drawView.p=p; stitchView.needFit=true; }
-  refreshAll(); scheduleSave();
+  refreshAll(); scheduleSave(); recordSnap(before,'redraw'); app.settingsBase=JSON.parse(JSON.stringify(p.settings));
 }
 
 function markEdited(){ app.p.edited=true; }
@@ -1762,7 +4158,7 @@ function renderPalette(){
       const row=document.createElement('div'); row.className='sug';
       const t = s.type==='similar' ? `${mini(s.drop)} and ${mini(s.keep)} look almost the same` : `${mini(s.drop)} is only used for ${st.counts[s.drop]} stitch${st.counts[s.drop]===1?'':'es'}`;
       row.innerHTML=`<div class="t">${t}</div><button class="btn ghost small">Merge into ${p.palette[s.keep].sym}</button>`;
-      row.querySelector('button').onclick=()=>{ mergeInto(p,s.drop,s.keep); afterPaletteChange(); toast('Colors merged'); };
+      row.querySelector('button').onclick=()=>{ designChange('merge',()=>mergeInto(p,s.drop,s.keep)); toast('Colors merged'); };
       sg.appendChild(row);
     });
   }
@@ -1776,10 +4172,11 @@ function renderPalette(){
     const lbl=row.querySelector('.lbl'); lbl.value=col.label||'';
     lbl.addEventListener('input',()=>{ col.label=lbl.value.slice(0,40); markEdited(); scheduleSave(); });
     const ci=row.querySelector('input[type=color]'), sw=row.querySelector('.sw');
-    ci.addEventListener('input',()=>{ col.rgb=hexToRgb(ci.value); sw.style.background=ci.value; sw.style.color=css(inkOn(col.rgb)); markEdited(); makeView.invalidate(); stitchView.invalidate(); scheduleSave(); });
-    ci.addEventListener('change',()=>afterPaletteChange());
-    row.querySelector('.icon-btn').onclick=()=>{ col.skip=!col.skip; markEdited(); if(app.hl===i){ app.hl=-1; stitchView.o.highlight=-1; } afterPaletteChange(); };
-    row.querySelector('select').onchange=e=>{ const to=parseInt(e.target.value); if(isNaN(to)) return; mergeInto(p,i,to); afterPaletteChange(); toast('Colors merged'); };
+    let cBefore=null;
+    ci.addEventListener('input',()=>{ if(!cBefore) cBefore=snapshot(); col.rgb=hexToRgb(ci.value); sw.style.background=ci.value; sw.style.color=css(inkOn(col.rgb)); markEdited(); makeView.invalidate(); stitchView.invalidate(); drawView.invalidate(); scheduleSave(); });
+    ci.addEventListener('change',()=>{ afterPaletteChange(); recordSnap(cBefore,'color change'); cBefore=null; });
+    row.querySelector('.icon-btn').onclick=()=>{ designChange(col.skip?'show color':'hide color',()=>{ col.skip=!col.skip; markEdited(); if(app.hl===i){ app.hl=-1; stitchView.o.highlight=-1; } }); };
+    row.querySelector('select').onchange=e=>{ const to=parseInt(e.target.value); if(isNaN(to)) return; designChange('merge',()=>mergeInto(p,i,to)); toast('Colors merged'); };
     row.addEventListener('click',e=>{ if(e.target.closest('input,select,button,label')) return; app.makeHl = app.makeHl===i ? -1 : i; makeView.o.highlight=app.makeHl; makeView.invalidate(); $$('#plist .prow').forEach((r,j)=>r.classList.toggle('sel',j===app.makeHl)); });
     list.appendChild(row);
   });
@@ -1787,7 +4184,7 @@ function renderPalette(){
 function afterPaletteChange(){
   app.makeHl=-1; makeView.o.highlight=-1;
   if(app.hl>=app.p.palette.length) app.hl=-1; stitchView.o.highlight=app.hl;
-  app.undo=[]; resetDrawHistory(); if(draw.color>=app.p.palette.length || (app.p.palette[draw.color]&&app.p.palette[draw.color].skip)) draw.color=firstColor(app.p);
+  app.undo=[]; draw.sel=null; if(draw.color>=app.p.palette.length || (app.p.palette[draw.color]&&app.p.palette[draw.color].skip)) draw.color=firstColor(app.p);
   refreshAll(); scheduleSave();
 }
 const ICON_EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
@@ -1795,11 +4192,28 @@ const ICON_EYE_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 /* ---------- draw tab ---------- */
-const draw = { tool:'pen', size:1, mirror:false, color:0, undo:[], redo:[], st:null, hinted:false };
+const draw = { tool:'pen', size:1, mirror:false, color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
 const drawView = new ChartView($('#drawCanvas'), { mode:'color', progress:false, drawing:true,
-  onDrawStart:drawStart, onDrawMove:(c,r)=>paintAt(c,r), onDrawEnd:commitStroke, onDrawCancel:cancelStroke, overlay:drawOverlay });
+  onDrawStart:drawStart, onDrawMove:(c,r)=>paintAt(c,r), onDrawDrag:drawDrag, onDrawEnd:drawEnd, onDrawCancel:cancelStroke, overlay:drawOverlay,
+  drawAnywhere:()=>draw.tool==='select' || draw.tool==='shape' });
 function firstColor(p){ const i=p.palette.findIndex(c=>!c.skip); return i<0?0:i; }
-function resetDrawHistory(){ draw.undo=[]; draw.redo=[]; draw.st=null; updateDrawUI(); }
+function resetDrawHistory(){ draw.undo=[]; draw.redo=[]; draw.st=null; draw.sel=null; draw.mv=null; updateDrawUI(); }
+// ---- One shared undo history for design changes (Make + Draw). Entries are cell changes or full snapshots.
+function snapshot(){ const p=app.p; return {w:p.w,h:p.h,grid:p.grid.slice(),done:p.done.slice(),palette:JSON.parse(JSON.stringify(p.palette)),settings:JSON.parse(JSON.stringify(p.settings)),src:p.src,edited:p.edited}; }
+function pushHistory(e){ draw.undo.push(e); while(draw.undo.length>60) draw.undo.shift(); draw.redo=[]; updateDrawUI(); }
+function recordSnap(before, label){ if(before) pushHistory({kind:'snap', before, after:snapshot(), label}); }
+async function restoreSnap(sn){
+  const p=app.p, sizeChanged = p.w!==sn.w || p.h!==sn.h;
+  Object.assign(p,{w:sn.w,h:sn.h,grid:sn.grid.slice(),done:sn.done.slice(),palette:JSON.parse(JSON.stringify(sn.palette)),settings:JSON.parse(JSON.stringify(sn.settings)),edited:sn.edited});
+  if(p.src!==sn.src){ p.src=sn.src; app.src=null; if(p.src){ try{ app.src=toCanvas(await loadImg(p.src),4096); }catch(e){} } }
+  app.undo=[]; app.hl=-1; stitchView.o.highlight=-1; app.makeHl=-1; makeView.o.highlight=-1; draw.sel=null; updateSelUI();
+  if(draw.color>=p.palette.length || (p.palette[draw.color]&&p.palette[draw.color].skip)) draw.color=firstColor(p);
+  if(sizeChanged){ makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p); }
+  app.settingsBase=JSON.parse(JSON.stringify(p.settings));
+  settingsToUI(); $('#redrawBar').hidden=true; refreshAll(); scheduleSave();
+}
+// Wrap a Make-tab change so it can be undone
+function designChange(label, fn){ const before=snapshot(); fn(); afterPaletteChange(); recordSnap(before,label); }
 function brushCells(c,r){
   const p=app.p, n=draw.size, o=n===3?-1:0, out=[];
   for(let dy=0;dy<n;dy++) for(let dx=0;dx<n;dx++){ const x=c+dx+o, y=r+dy+o; if(x>=0&&y>=0&&x<p.w&&y<p.h) out.push(y*p.w+x); }
@@ -1830,16 +4244,102 @@ function drawStart(cell){
     else { draw.color=v; setTool('pen'); }
     return false;
   }
+  if(draw.tool==='select') return selectStart(cell);
   if(draw.tool!=='erase' && (!p.palette.length || !p.palette[draw.color] || p.palette[draw.color].skip)){ toast('Add a color first with the + button'); return false; }
   draw.st={map:new Map()};
+  if(draw.tool==='shape'){ $('#shapePop').hidden=true; draw.a=cell; draw.b=cell; shapePreview(); return true; }
   if(draw.tool==='fill'){ const v=drawValue(); floodFill(cell.c,cell.r,v); if(draw.mirror){ const mx=p.w-1-cell.c; if(mx!==cell.c) floodFill(mx,cell.r,v); } commitStroke(); return false; }
   paintAt(cell.c,cell.r); drawView.bmpDirty=true; return true;
 }
-function cancelStroke(){ const st=draw.st; draw.st=null; if(!st) return; const p=app.p; for(const [i,[g,d]] of st.map){ p.grid[i]=g; p.done[i]=d; } drawView.invalidate(); }
+function revertMap(){ const p=app.p; for(const [i,[g,d]] of draw.st.map){ p.grid[i]=g; p.done[i]=d; } draw.st.map.clear(); }
+function drawDrag(cell, e){
+  if(draw.tool==='shape' && draw.a){ draw.b = e && e.shiftKey ? constrain(draw.a, cell) : cell; shapePreview(); return true; }
+  if(draw.tool==='select' && draw.mv){ selectDrag(cell); return true; }
+  return false;
+}
+function drawEnd(){
+  if(draw.tool==='select'){ selectEnd(); return; }
+  draw.a=draw.b=null; commitStroke();
+}
+// ---- Shapes
+function constrain(a,b){
+  const dx=b.c-a.c, dy=b.r-a.r;
+  if(draw.shape==='line'){ const ax=Math.abs(dx), ay=Math.abs(dy); if(ax>2*ay) return {c:b.c,r:a.r}; if(ay>2*ax) return {c:a.c,r:b.r}; const m=Math.max(ax,ay); return {c:a.c+Math.sign(dx)*m, r:a.r+Math.sign(dy)*m}; }
+  const m=Math.max(Math.abs(dx),Math.abs(dy)); return {c:a.c+(dx<0?-m:m), r:a.r+(dy<0?-m:m)};
+}
+function shapeCells(a,b){
+  const p=app.p, out=new Set(), add=(x,y)=>{ if(x>=0&&y>=0&&x<p.w&&y<p.h) out.add(y*p.w+x); };
+  const t=draw.size, o=t===3?-1:0, stamp=(x,y)=>{ for(let dy=0;dy<t;dy++) for(let dx=0;dx<t;dx++) add(x+dx+o,y+dy+o); };
+  if(draw.shape==='line'){
+    let x0=a.c,y0=a.r; const x1=b.c,y1=b.r, dx=Math.abs(x1-x0), dy=-Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx+dy;
+    for(;;){ stamp(x0,y0); if(x0===x1&&y0===y1) break; const e2=2*err; if(e2>=dy){err+=dy;x0+=sx;} if(e2<=dx){err+=dx;y0+=sy;} }
+  } else {
+    const X0=Math.min(a.c,b.c), Y0=Math.min(a.r,b.r), w=Math.abs(b.c-a.c)+1, h=Math.abs(b.r-a.r)+1;
+    const m=new Uint8Array(w*h); let kind=draw.shape; if((kind==='oval'||kind==='heart') && (w<3||h<3)) kind='rect';
+    for(let j=0;j<h;j++) for(let i=0;i<w;i++){
+      let inside=true;
+      if(kind==='oval'){ const u=(i+0.5-w/2)/(w/2), v=(j+0.5-h/2)/(h/2); inside=u*u+v*v<=1.0; }
+      else if(kind==='heart'){ const u=-1.14+(i+0.5)/w*2.28, v=1.22-(j+0.5)/h*2.24; const q=u*u+v*v-1; inside=q*q*q-u*u*v*v*v<=0; }
+      m[j*w+i]=inside?1:0;
+    }
+    let keep=m;
+    if(!draw.filled){
+      let er=m.slice();
+      for(let k=0;k<t;k++){ const n=er.slice(); for(let j=0;j<h;j++) for(let i=0;i<w;i++){ const q=j*w+i; if(!er[q]) continue;
+        if(i===0||j===0||i===w-1||j===h-1||!er[q-1]||!er[q+1]||!er[q-w]||!er[q+w]) n[q]=0; } er=n; }
+      keep=m.map((v,q)=>v&&!er[q]?1:0);
+    }
+    for(let j=0;j<h;j++) for(let i=0;i<w;i++) if(keep[j*w+i]) add(X0+i,Y0+j);
+  }
+  if(draw.mirror){ for(const i of [...out]){ const x=i%p.w, y=(i/p.w)|0; out.add(y*p.w+(p.w-1-x)); } }
+  return out;
+}
+function shapePreview(){ if(!draw.st||!draw.a) return; revertMap(); const v=draw.color; for(const i of shapeCells(draw.a,draw.b)) setCell(i,v); drawView.invalidate(); }
+function setShape(sh){ draw.shape=sh; draw.tool='shape'; $('#shapeToolBtn .shpico').innerHTML=$(`#shapeSeg button[data-v="${sh}"]`).innerHTML; updateDrawUI(); renderDrawPalette(); }
+// ---- Select and move
+function inSel(c,r){ const s=draw.sel; return s && c>=s.x && c<s.x+s.w && r>=s.y && r<s.y+s.h; }
+function selData(){ const p=app.p, s=draw.sel, d=new Uint16Array(s.w*s.h).fill(EMPTY);
+  for(let j=0;j<s.h;j++) for(let i=0;i<s.w;i++){ const x=s.x+i, y=s.y+j; if(x>=0&&y>=0&&x<p.w&&y<p.h) d[j*s.w+i]=p.grid[y*p.w+x]; } return d; }
+function selectStart(cell){
+  if(inSel(cell.c,cell.r)){ draw.st={map:new Map()}; draw.mv={mode:'move', gx:cell.c, gy:cell.r, ox:draw.sel.x, oy:draw.sel.y, data:selData()}; return true; }
+  draw.sel={x:cell.c,y:cell.r,w:1,h:1}; draw.mv={mode:'new', ax:cell.c, ay:cell.r, moved:false}; updateSelUI(); drawView.draw(); return true;
+}
+function selectDrag(cell){
+  const m=draw.mv, p=app.p;
+  if(m.mode==='new'){ m.moved=true; draw.sel={x:Math.min(m.ax,cell.c), y:Math.min(m.ay,cell.r), w:Math.abs(cell.c-m.ax)+1, h:Math.abs(cell.r-m.ay)+1}; drawView.draw(); return; }
+  const nx=m.ox+(cell.c-m.gx), ny=m.oy+(cell.r-m.gy), s=draw.sel; if(nx===s.x && ny===s.y) return;
+  revertMap();
+  for(let j=0;j<s.h;j++) for(let i=0;i<s.w;i++){ const v=m.data[j*s.w+i], x=m.ox+i, y=m.oy+j; if(v!==EMPTY && x>=0&&y>=0&&x<p.w&&y<p.h) setCell(y*p.w+x, EMPTY); }
+  for(let j=0;j<s.h;j++) for(let i=0;i<s.w;i++){ const v=m.data[j*s.w+i], x=nx+i, y=ny+j; if(v!==EMPTY && x>=0&&y>=0&&x<p.w&&y<p.h) setCell(y*p.w+x, v); }
+  draw.sel={x:nx,y:ny,w:s.w,h:s.h}; drawView.invalidate();
+}
+function selectEnd(){
+  const m=draw.mv; draw.mv=null;
+  if(m && m.mode==='new' && !m.moved){ draw.sel=null; }
+  if(m && m.mode==='move') commitStroke();
+  updateSelUI(); drawView.draw();
+}
+function selAction(kind){
+  const p=app.p, s=draw.sel; if(!s) return;
+  const data=selData(); draw.st={map:new Map()};
+  const put=(x,y,v)=>{ if(x>=0&&y>=0&&x<p.w&&y<p.h) setCell(y*p.w+x,v); };
+  if(kind==='delete'){ for(let j=0;j<s.h;j++) for(let i=0;i<s.w;i++) put(s.x+i,s.y+j,EMPTY); }
+  else if(kind==='flip'){ for(let j=0;j<s.h;j++) for(let i=0;i<s.w;i++) put(s.x+i,s.y+j,data[j*s.w+(s.w-1-i)]); }
+  else if(kind==='dup'){
+    let nx=s.x+Math.min(3,Math.max(1,Math.round(s.w/4))), ny=s.y+Math.min(3,Math.max(1,Math.round(s.h/4)));
+    if(nx+s.w>p.w) nx=Math.max(0,s.x-Math.max(1,Math.round(s.w/4))); if(ny+s.h>p.h) ny=Math.max(0,s.y-Math.max(1,Math.round(s.h/4)));
+    for(let j=0;j<s.h;j++) for(let i=0;i<s.w;i++){ const v=data[j*s.w+i]; if(v!==EMPTY) put(nx+i,ny+j,v); }
+    draw.sel={x:nx,y:ny,w:s.w,h:s.h}; toast('Duplicated: drag it where you want it');
+  }
+  commitStroke(); if(kind==='delete') draw.sel=null; updateSelUI(); drawView.invalidate();
+}
+function selectAll(){ const p=app.p; draw.tool='select'; draw.sel={x:0,y:0,w:p.w,h:p.h}; updateDrawUI(); updateSelUI(); drawView.draw(); }
+function updateSelUI(){ $('#selBar').hidden = !(draw.sel && draw.tool==='select'); }
+function cancelStroke(){ const st=draw.st; draw.st=null; draw.a=draw.b=null; draw.mv=null; if(!st) return; const p=app.p; for(const [i,[g,d]] of st.map){ p.grid[i]=g; p.done[i]=d; } drawView.invalidate(); }
 function commitStroke(){
   const st=draw.st; draw.st=null; if(!st || !st.map.size){ drawView.invalidate(); return; }
   const p=app.p, cells=[...st.map.keys()], before=[...st.map.values()], after=cells.map(i=>p.grid[i]);
-  draw.undo.push({cells,before,after}); if(draw.undo.length>150) draw.undo.shift(); draw.redo=[];
+  pushHistory({kind:'cells',cells,before,after});
   afterDrawChange();
 }
 function afterDrawChange(){
@@ -1848,24 +4348,41 @@ function afterDrawChange(){
   updateSizeInfo(); updateDrawUI(); scheduleSave();
 }
 function undoDraw(){
+  if(draw.st) return;
   const e=draw.undo.pop(); if(!e){ toast('Nothing to undo'); return; }
+  draw.redo.push(e);
+  if(e.kind==='snap'){ restoreSnap(e.before); updateDrawUI(); toast('Undid '+(e.label||'change')); return; }
   const p=app.p; e.cells.forEach((i,k)=>{ p.grid[i]=e.before[k][0]; p.done[i]=e.before[k][1]; });
-  draw.redo.push(e); afterDrawChange();
+  afterDrawChange();
 }
 function redoDraw(){
+  if(draw.st) return;
   const e=draw.redo.pop(); if(!e) return;
+  draw.undo.push(e);
+  if(e.kind==='snap'){ restoreSnap(e.after); updateDrawUI(); toast('Redid '+(e.label||'change')); return; }
   const p=app.p; e.cells.forEach((i,k)=>{ p.grid[i]=e.after[k]; p.done[i]=0; });
-  draw.undo.push(e); afterDrawChange();
+  afterDrawChange();
 }
-function setTool(t){ draw.tool=t; updateDrawUI(); renderDrawPalette(); }
+function setTool(t){
+  if(t==='shape' && draw.tool==='shape'){ $('#shapePop').hidden=!$('#shapePop').hidden; return; }
+  draw.tool=t; if(t!=='select'){ draw.sel=null; } $('#shapePop').hidden = t!=='shape';
+  updateDrawUI(); updateSelUI(); renderDrawPalette(); drawView.draw();
+}
 function updateDrawUI(){
   setSeg('#toolSeg', draw.tool); setSeg('#brushSeg', String(draw.size));
   $('#mirrorBtn').setAttribute('aria-pressed', String(draw.mirror));
-  $('#dUndo').disabled=$('#dUndoM').disabled=!draw.undo.length; $('#dRedo').disabled=$('#dRedoM').disabled=!draw.redo.length;
-  $$('#brushSeg button').forEach(b=>b.disabled = draw.tool==='fill' || draw.tool==='pick');
+  $('#dUndo').disabled=$('#dUndoM').disabled=$('#mUndo').disabled=!draw.undo.length; $('#dRedo').disabled=$('#dRedoM').disabled=$('#mRedo').disabled=!draw.redo.length;
+  $$('#brushSeg button').forEach(b=>b.disabled = ['fill','pick','select'].includes(draw.tool) || (draw.tool==='shape' && draw.filled && draw.shape!=='line'));
+  setSeg('#shapeSeg', draw.shape); setSeg('#fillSeg', draw.filled?'filled':'outline');
+  $('#drawCanvas').style.cursor = draw.tool==='select' ? 'default' : 'crosshair';
 }
 function drawOverlay(ctx,v){
-  if(!draw.mirror || !v.p) return;
+  if(draw.sel && v.p && draw.tool==='select'){
+    const s=draw.sel, x=Math.round(v.ox+s.x*v.s)+.5, y=Math.round(v.oy+s.y*v.s)+.5, w=Math.round(s.w*v.s), h=Math.round(s.h*v.s);
+    ctx.save(); ctx.fillStyle='rgba(46,94,115,.10)'; ctx.fillRect(x,y,w,h);
+    ctx.lineWidth=1.5; ctx.strokeStyle='#fff'; ctx.strokeRect(x,y,w,h); ctx.setLineDash([5,4]); ctx.strokeStyle='#2A2420'; ctx.strokeRect(x,y,w,h); ctx.restore();
+  }
+  if(!draw.mirror || !v.p || draw.tool==='select') return;
   const x=Math.round(v.ox+v.p.w/2*v.s)+.5, y0=Math.max(0,v.oy), y1=Math.min(v.H,v.oy+v.p.h*v.s);
   ctx.save(); ctx.setLineDash([6,5]); ctx.strokeStyle='#C2412D'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y0-8); ctx.lineTo(x,y1+8); ctx.stroke(); ctx.restore();
 }
@@ -1885,8 +4402,9 @@ function renderDrawPalette(){
     if(sel){
       b.insertAdjacentHTML('beforeend','<i class="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg></i>');
       const inp=document.createElement('input'); inp.type='color'; inp.value=toHex(c.rgb); inp.setAttribute('aria-label','Change this color');
-      inp.addEventListener('input',()=>{ c.rgb=hexToRgb(inp.value); b.querySelector('span').style.background=inp.value; p.edited=true; makeView.invalidate(); stitchView.invalidate(); drawView.invalidate(); });
-      inp.addEventListener('change',()=>{ scheduleSave(); renderChips(); });
+      let before=null;
+      inp.addEventListener('input',()=>{ if(!before) before=snapshot(); c.rgb=hexToRgb(inp.value); b.querySelector('span').style.background=inp.value; p.edited=true; makeView.invalidate(); stitchView.invalidate(); drawView.invalidate(); });
+      inp.addEventListener('change',()=>{ scheduleSave(); renderChips(); recordSnap(before,'color change'); before=null; });
       b.appendChild(inp);
     } else b.onclick=()=>{ draw.color=i; if(draw.tool==='erase'||draw.tool==='pick') draw.tool='pen'; updateDrawUI(); renderDrawPalette(); };
     wrap.appendChild(b);
@@ -1902,31 +4420,62 @@ function renderDrawPalette(){
 function addColor(rgb){
   const p=app.p; const used=new Set(p.palette.map(c=>c.sym)); const sym=SYMBOLS.find(x=>!used.has(x));
   if(!sym){ toast('That’s the most colors a pattern can have'); return; }
-  p.palette.push({rgb, sym, label:'', skip:false}); p.edited=true;
+  const before=snapshot();
+  p.palette.push({rgb, sym, label:'', skip:false}); p.edited=true; recordSnap(before,'new color');
   draw.color=p.palette.length-1; draw.tool='pen';
   updateDrawUI(); renderDrawPalette(); renderChips(); updateSizeInfo(); scheduleSave();
   requestAnimationFrame(()=>{ const w=$('#dchips'); w.scrollLeft=w.scrollWidth; });
 }
 function showDrawHint(){
   if(draw.hinted) return; draw.hinted=true;
-  const h=$('#drawHint'); if(!matchMedia('(pointer:coarse)').matches) h.textContent='Click and drag to draw · scroll to zoom · B E G I M for tools';
+  const h=$('#drawHint'); if(!matchMedia('(pointer:coarse)').matches) h.textContent='Click and drag to draw · scroll to zoom · press ? for shortcuts';
   h.style.opacity='1'; setTimeout(()=>h.style.opacity='0',3200);
 }
-// Patterns without a picture: changing the size adds or trims stitches around the edges (centered).
-async function resizeFromInputs(){
-  const p=app.p, s=p.settings;
-  const nw=Math.max(4,Math.min(300,parseInt($('#wIn').value)||p.w)), nh=Math.max(4,Math.min(300,parseInt($('#hIn').value)||p.h));
-  $('#wIn').value=nw; $('#hIn').value=nh;
+// Canvas size: add or trim stitches around the edges, anchored like Photoshop's Canvas Size.
+const cs={ ax:1, ay:1 };
+function openCanvasSize(){
+  const p=app.p, m=$('#canvasModal'); m.hidden=false; cs.ax=1; cs.ay=1;
+  $('#csW').value=p.w; $('#csH').value=p.h;
+  const an=$('#csAnchor'); an.innerHTML='';
+  for(let j=0;j<3;j++) for(let i=0;i<3;i++){ const b=document.createElement('button'); b.innerHTML='<i></i>'; b.setAttribute('aria-label',['Top','Middle','Bottom'][j]+' '+['left','center','right'][i]); b.onclick=()=>{ cs.ax=i; cs.ay=j; csPreview(); }; an.appendChild(b); }
+  $('#csW').oninput=$('#csH').oninput=csPreview;
+  $('#csCancel').onclick=()=>{ m.hidden=true; };
+  $('#csApply').onclick=()=>{ m.hidden=true; applyCanvasSize(); };
+  requestAnimationFrame(csPreview);
+}
+function csDims(){ const p=app.p; return { nw:Math.max(4,Math.min(300,parseInt($('#csW').value)||p.w)), nh:Math.max(4,Math.min(300,parseInt($('#csH').value)||p.h)) }; }
+function csOffset(nw,nh){ const p=app.p, f=(n,o,a)=>a===0?0:a===2?n-o:Math.floor((n-o)/2); return { dx:f(nw,p.w,cs.ax), dy:f(nh,p.h,cs.ay) }; }
+function csPreview(){
+  const p=app.p, {nw,nh}=csDims(), {dx,dy}=csOffset(nw,nh);
+  $$('#csAnchor button').forEach((b,k)=>b.setAttribute('aria-pressed',String(k===cs.ay*3+cs.ax)));
+  const cv=$('#csPrev'), r=cv.getBoundingClientRect(); if(!r.width) return;
+  const dpr=window.devicePixelRatio||1; cv.width=r.width*dpr; cv.height=r.height*dpr; const x=cv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0);
+  x.fillStyle='#E9E1D3'; x.fillRect(0,0,r.width,r.height);
+  const minX=Math.min(0,dx), minY=Math.min(0,dy), maxX=Math.max(nw,dx+p.w), maxY=Math.max(nh,dy+p.h);
+  const sc=Math.min((r.width-20)/(maxX-minX),(r.height-20)/(maxY-minY)), ox=(r.width-(maxX-minX)*sc)/2-minX*sc, oy=(r.height-(maxY-minY)*sc)/2-minY*sc;
+  const img=renderCanvas(p,1);
+  x.imageSmoothingEnabled=false;
+  x.globalAlpha=.3; x.drawImage(img,ox+dx*sc,oy+dy*sc,p.w*sc,p.h*sc); x.globalAlpha=1;
+  x.fillStyle=FAB_CSS; x.fillRect(ox,oy,nw*sc,nh*sc);
+  x.save(); x.beginPath(); x.rect(ox,oy,nw*sc,nh*sc); x.clip(); x.drawImage(img,ox+dx*sc,oy+dy*sc,p.w*sc,p.h*sc); x.restore();
+  x.strokeStyle='#2A2420'; x.lineWidth=1.5; x.strokeRect(ox+.5,oy+.5,nw*sc,nh*sc);
+  x.setLineDash([4,3]); x.strokeStyle='#C2412D'; x.strokeRect(ox+dx*sc+.5,oy+dy*sc+.5,p.w*sc,p.h*sc); x.setLineDash([]);
+  let lost=0; for(let y=0;y<p.h;y++) for(let xx=0;xx<p.w;xx++){ const X=xx+dx, Y=y+dy; if((X<0||Y<0||X>=nw||Y>=nh) && p.grid[y*p.w+xx]!==EMPTY) lost++; }
+  const dW=nw-p.w, dH=nh-p.h, parts=[];
+  if(dW) parts.push(`${dW>0?'adds':'trims'} ${Math.abs(dW)} column${Math.abs(dW)>1?'s':''}`); if(dH) parts.push(`${dH>0?'adds':'trims'} ${Math.abs(dH)} row${Math.abs(dH)>1?'s':''}`);
+  $('#csNote').textContent = parts.length ? `${p.w} × ${p.h} → ${nw} × ${nh}: ${parts.join(', ')}${lost?` (${lost} stitch${lost>1?'es':''} cut off)`:''}.` : 'Same size as now.';
+}
+function applyCanvasSize(){
+  const p=app.p, s=p.settings, {nw,nh}=csDims(), {dx,dy}=csOffset(nw,nh);
   if(nw===p.w && nh===p.h) return;
-  const dx=Math.floor((nw-p.w)/2), dy=Math.floor((nh-p.h)/2);
-  let lost=0; for(let y=0;y<p.h;y++) for(let x=0;x<p.w;x++){ const nx=x+dx, ny=y+dy; if((nx<0||ny<0||nx>=nw||ny>=nh) && p.grid[y*p.w+x]!==EMPTY) lost++; }
-  if(lost){ const v=await dialog('Trim stitches at the edges?', `Making the canvas smaller removes ${lost} stitch${lost>1?'es':''} around the edges.`, [{label:'Cancel',value:false},{label:'Trim',value:true,primary:true}]); if(!v){ $('#wIn').value=p.w; $('#hIn').value=p.h; return; } }
+  const before=snapshot();
   const g=new Uint16Array(nw*nh).fill(EMPTY), d=new Uint8Array(nw*nh);
-  for(let y=0;y<p.h;y++) for(let x=0;x<p.w;x++){ const nx=x+dx, ny=y+dy; if(nx<0||ny<0||nx>=nw||ny>=nh) continue; g[ny*nw+nx]=p.grid[y*p.w+x]; d[ny*nw+nx]=p.done[y*p.w+x]; }
+  for(let y=0;y<p.h;y++) for(let x=0;x<p.w;x++){ const X=x+dx, Y=y+dy; if(X<0||Y<0||X>=nw||Y>=nh) continue; g[Y*nw+X]=p.grid[y*p.w+x]; d[Y*nw+X]=p.done[y*p.w+x]; }
   Object.assign(p,{w:nw,h:nh,grid:g,done:d}); s.w=nw; s.h=nh; p.edited=true;
-  app.undo=[]; resetDrawHistory();
+  app.undo=[]; draw.sel=null;
   makeView.setProject(p); stitchView.setProject(p); drawView.setProject(p);
-  refreshAll(); scheduleSave();
+  settingsToUI(); refreshAll(); scheduleSave(); recordSnap(before,'canvas size');
+  toast(`Canvas is now ${nw} × ${nh}`);
 }
 // Blank canvas
 const STARTER=[[42,36,32],[255,255,255],[194,65,45],[233,162,59],[242,208,92],[95,127,105],[46,94,115],[126,96,160],[232,164,180],[139,94,60]];
@@ -2086,9 +4635,11 @@ async function initCloud(){
     for(const m of ['app','auth','firestore']) await loadAny([`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-${m}-compat.js`, `https://cdn.jsdelivr.net/npm/firebase@${FB_VER}/firebase-${m}-compat.js`]);
     firebase.initializeApp(FIREBASE_CONFIG);
   }catch(e){ console.warn('Sync unavailable:', e); return; }
-  cloud.ready=true; renderAcct();
+  cloud.ready=true; renderAcct(); $('#shareCard').hidden=false;
+  cloud.authReady=new Promise(r=>cloud._authResolve=r);
   firebase.auth().getRedirectResult().catch(e=>signInError(e));
-  firebase.auth().onAuthStateChanged(u=>{ cloud.user=u; if(u){ store.set(LAST_UID_KEY,u.uid); useNamespace('xw:u:'+u.uid+':'); startSync(); offerDeviceMove(); } else { stopSync(); store.del(LAST_UID_KEY); useNamespace(DEVICE_NS); } renderAcct(); });
+  checkShareHash();
+  firebase.auth().onAuthStateChanged(u=>{ if(cloud._authResolve){ cloud._authResolve(); cloud._authResolve=null; } cloud.user=u; if(u){ store.set(LAST_UID_KEY,u.uid); useNamespace('xw:u:'+u.uid+':'); startSync(); offerDeviceMove(); } else { stopSync(); store.del(LAST_UID_KEY); useNamespace(DEVICE_NS); } renderAcct(); });
   window.addEventListener('online',()=>setCloudStatus(cloud.user?'synced':'off'));
   window.addEventListener('offline',()=>setCloudStatus('offline'));
 }
@@ -2240,6 +4791,97 @@ async function pushPattern(id){
 }
 function cloudDelete(id){ if(!cloud.col) return; clearTimeout(cloud.pushT[id]); delete cloud.pushT[id]; cloud.col.doc(id).set({deleted:true, updated:Date.now(), payload:'', src:null, name:'', w:0, h:0}).catch(e=>console.warn(e)); }
 
+/* ---------- sharing designs (link + QR) ---------- */
+function shareLink(id){ return location.origin+location.pathname+'#s-'+id; }
+async function shareDesign(id){
+  if(!cloud.ready){ toast('Sharing works on your Stitch Studio website.'); return; }
+  if(!cloud.user){
+    const v=await dialog('Sign in to share', 'Sharing a design needs you to be signed in, so the link knows whose design it is.', [{label:'Cancel',value:false},{label:'Sign in',value:true,primary:true}]);
+    if(v) signIn(); return;
+  }
+  if(app.p && app.p.id===id) saveNow();
+  const o=store.get(pKey(id)); if(!o){ toast("Couldn't find that pattern."); return; }
+  working(true,'Creating link…');
+  const ref = o.shareId ? firebase.firestore().collection('shares').doc(o.shareId) : firebase.firestore().collection('shares').doc();
+  const first=(cloud.user.displayName||'').split(' ')[0]||'';
+  const doc={ v:1, owner:cloud.user.uid, from:first, name:o.name||'Shared design', w:o.w, h:o.h, palette:o.palette.map(c=>({rgb:c.rgb, sym:c.sym, label:c.label||'', skip:!!c.skip})), grid:o.grid, updated:Date.now() };
+  try{ await ref.set(doc); }
+  catch(e){ working(false); console.warn(e); toast(e && e.code==='permission-denied' ? "Sharing isn't switched on yet: the Firebase rules need the sharing section." : "Couldn't create the link. Check your connection and try again."); return; }
+  working(false);
+  if(o.shareId!==ref.id) updateSaved(id, x=>{ x.shareId=ref.id; });
+  showShareDialog(ref.id, o.name);
+}
+function showShareDialog(sid, name){
+  const link=shareLink(sid);
+  dialog(`Share "${name}"`, 'Anyone who opens this link or scans the code gets their own copy of the design. Your stitch progress isn’t shared. If you change the design later, share it again to update the link.', [
+    {label:'Stop sharing', value:'stop'}, {label:'Done', value:null, primary:true}
+  ], {extra:(box)=>{
+    const wrap=document.createElement('div'); wrap.className='share-box';
+    const cv=document.createElement('canvas');
+    try{ const q=qrcode(0,'M'); q.addData(link); q.make(); const n=q.getModuleCount(), m=4, sz=n+m*2; cv.width=sz; cv.height=sz; const x=cv.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,sz,sz); x.fillStyle='#2A2420'; for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(q.isDark(r,c)) x.fillRect(c+m,r+m,1,1); }catch(e){ console.warn(e); }
+    const row=document.createElement('div'); row.className='share-link';
+    const inp=document.createElement('input'); inp.className='num'; inp.readOnly=true; inp.value=link; inp.onfocus=()=>inp.select();
+    const copy=document.createElement('button'); copy.className='btn small accent'; copy.textContent='Copy link';
+    copy.onclick=async()=>{ try{ await navigator.clipboard.writeText(link); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy link',1600); }catch(e){ inp.select(); toast('Select the link and copy it'); } };
+    row.append(inp,copy); wrap.append(cv,row);
+    if(navigator.share){ const sh=document.createElement('button'); sh.className='btn small ghost'; sh.textContent='Share…'; sh.onclick=()=>navigator.share({title:name, text:`A cross stitch design for Stitch Studio: ${name}`, url:link}).catch(()=>{}); wrap.appendChild(sh); }
+    box.appendChild(wrap);
+  }}).then(async v=>{
+    if(v!=='stop') return;
+    try{ await firebase.firestore().collection('shares').doc(sid).delete(); }catch(e){ console.warn(e); }
+    const e=(store.get(idxKey())||[]).find(x=>{ const o=store.get(pKey(x.id)); return o && o.shareId===sid; });
+    if(e) updateSaved(e.id, x=>{ x.shareId=null; });
+    toast('Stopped sharing. The link no longer works.');
+  });
+}
+// Opening a shared link: #s-<id>
+async function checkShareHash(){
+  const m=/^#s-([A-Za-z0-9]+)$/.exec(location.hash||''); if(!m || !cloud.ready) return;
+  const sid=m[1];
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  if(cloud.authReady) await cloud.authReady;
+  let snap; try{ snap=await firebase.firestore().collection('shares').doc(sid).get(); }catch(e){ console.warn(e); toast("Couldn't open that shared design."); return; }
+  if(!snap.exists){ toast('That shared design is no longer available.'); return; }
+  const d=snap.data();
+  const prev={w:d.w,h:d.h,palette:d.palette,grid:new Uint16Array(b64ToBytes(d.grid).buffer.slice(0))};
+  const img=renderCanvas(prev, Math.max(1,Math.floor(220/Math.max(d.w,d.h)))).toDataURL('image/png');
+  const v=await dialog(`${d.from?d.from+' shared':'Someone shared'} a design with you`, `"${d.name}" · ${d.w} × ${d.h} stitches. Add it to ${cloud.user?'your patterns':'this device'}?`, [{label:'No thanks',value:false},{label:'Add to my patterns',value:true,primary:true}],
+    {extra:(box)=>{ const im=document.createElement('img'); im.className='import-prev'; im.src=img; im.alt=''; box.appendChild(im); }});
+  if(!v) return;
+  if(app.p) saveNow();
+  const s=defaultSettings(d.w,d.h); Object.assign(s,{w:d.w,h:d.h,blank:true,pixel:true,cleanup:'off'});
+  const p={id:uid(), name:d.name||'Shared design', created:Date.now(), updated:Date.now(), settings:s, edited:true, src:null, w:d.w, h:d.h, folder:null,
+    grid:prev.grid, done:new Uint8Array(d.w*d.h), palette:d.palette.map(c=>({rgb:c.rgb, sym:c.sym, label:c.label||'', skip:!!c.skip}))};
+  app.p=p; app.src=null; saveNow(); showEditor('stitch'); toast('Added to your patterns');
+}
+window.addEventListener('hashchange', checkShareHash);
+
+/* ---------- keyboard shortcuts ---------- */
+const TABS=['make','draw','stitch','print'];
+function showShortcuts(){
+  const mac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent), C=mac?'⌘':'Ctrl', A=mac?'⌥':'Alt';
+  const k=(...ks)=>ks.map(x=>`<kbd>${x}</kbd>`).join(' ');
+  const rows=[
+    ['Anywhere'],
+    ['Switch tabs (Make, Draw, Stitch, Print)', `${k(A)} + ${k('1','2','3','4')}`],
+    ['Undo / redo', `${k(C,'Z')} / ${k('Shift',C,'Z')}`],
+    ['Fit to screen', k('F')], ['Zoom in / out', k('+','−')],
+    ['This list', k('?')],
+    ['Draw'],
+    ['Pen / Eraser / Fill / Pick color', k('B','E','G','I')],
+    ['Shapes: line / rectangle / oval / heart', k('L','R','O','H')],
+    ['Outline or filled shapes', k('U')],
+    ['Hold while drawing a shape: perfect square, circle or straight line', k('Shift')],
+    ['Select', k('V')], ['Select everything', k(C,'A')],
+    ['Duplicate / delete selection', `${k('D')} / ${k('Delete')}`], ['Deselect', k('Esc')],
+    ['Mirror on/off', k('M')], ['Brush or line size', k('1','2','3')],
+    ['Stitch'],
+    ['Switch between Move and Mark', k('M')], ['Show all colors', k('Esc')],
+  ];
+  const html='<div class="scrollbox"><table class="kbd-table">'+rows.map(r=>r.length===1?`<tr><th colspan="2">${r[0]}</th></tr>`:`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')+'</table></div>';
+  dialog('Keyboard shortcuts', '', [{label:'Close',value:null,primary:true}], {wide:true, extra:box=>{ box.innerHTML=html; }});
+}
+
 /* ---------- wire up ---------- */
 $('#homeBtn').onclick=showLibrary;
 $('#blankBtn').onclick=openBlankDialog;
@@ -2270,6 +4912,14 @@ $$('#cleanupSeg button').forEach(b=>b.onclick=()=>{ app.p.settings.cleanup=b.dat
 $('#redrawBtn').onclick=()=>regenerate(true);
 $('#pixelIn').onchange=()=>{ const s=app.p.settings; s.pixel=$('#pixelIn').checked; if(s.pixel){ s.cleanup='off'; setSeg('#cleanupSeg','off'); } updateMatchRow(); onSettingChange(); };
 
+$('#kbBtn').onclick=showShortcuts;
+$('#mUndo').onclick=undoDraw; $('#mRedo').onclick=redoDraw;
+$('#canvasBtn1').onclick=$('#canvasBtn2').onclick=openCanvasSize;
+$('#shareBtn').onclick=()=>app.p && shareDesign(app.p.id);
+$$('#shapeSeg button').forEach(b=>b.onclick=()=>{ setShape(b.dataset.v); $('#shapePop').hidden=true; });
+$$('#fillSeg button').forEach(b=>b.onclick=()=>{ draw.filled=b.dataset.v==='filled'; updateDrawUI(); });
+$('#selDup').onclick=()=>selAction('dup'); $('#selFlip').onclick=()=>selAction('flip'); $('#selDel').onclick=()=>selAction('delete');
+$('#selDone').onclick=()=>{ draw.sel=null; updateSelUI(); drawView.draw(); };
 $('#colorAllBtn').onclick=()=>markColor(1);
 $('#colorClearBtn').onclick=()=>markColor(0);
 $('#libSearch').addEventListener('input',e=>{ libState.q=e.target.value; renderLibrary(); });
@@ -2283,20 +4933,45 @@ $('#zoomInBtn').onclick=()=>stitchView.zoomCenter(1.4);
 $('#zoomOutBtn').onclick=()=>stitchView.zoomCenter(1/1.4);
 $('#viewBtn').onclick=()=>{ const i=(VIEW_MODES.findIndex(m=>m[0]===stitchView.o.mode)+1)%VIEW_MODES.length; stitchView.o.mode=VIEW_MODES[i][0]; $('#viewLbl').textContent = window.innerWidth<=860 ? VIEW_SHORT[VIEW_MODES[i][0]] : VIEW_MODES[i][1]; toast('Showing: '+VIEW_MODES[i][1].toLowerCase()); stitchView.invalidate(); };
 document.addEventListener('keydown',e=>{
-  if(app.p && app.tab==='draw' && !e.target.closest('input,select,textarea')){
-    const k=e.key.toLowerCase();
-    if((e.metaKey||e.ctrlKey) && k==='z'){ e.preventDefault(); e.shiftKey ? redoDraw() : undoDraw(); }
-    else if((e.metaKey||e.ctrlKey) && k==='y'){ e.preventDefault(); redoDraw(); }
-    else if(e.metaKey||e.ctrlKey||e.altKey) return;
-    else if(k==='b'||k==='p') setTool('pen'); else if(k==='e') setTool('erase'); else if(k==='g') setTool('fill'); else if(k==='i') setTool('pick');
-    else if(k==='m') $('#mirrorBtn').click(); else if(k==='f') drawView.fit();
-    else if(['1','2','3'].includes(k)){ draw.size=+k; updateDrawUI(); }
+  const inField=e.target.closest('input,select,textarea');
+  const modalOpen = !$('#modal').hidden || !$('#canvasModal').hidden || !$('#blankModal').hidden || !$('#cropper').hidden;
+  if(modalOpen){ if(e.key==='Escape' && !$('#modal').hidden){ const btns=$$('#mActs button'); const c=btns.find(b=>/^(Cancel|Close|Done|No thanks|Not yet)$/.test(b.textContent)); if(c) c.click(); } return; }
+  if(inField) return;
+  const k=e.key.toLowerCase(), mod=e.metaKey||e.ctrlKey;
+  // tabs: Option/Alt+1-4 (and Cmd/Ctrl+1-4 where the browser allows it)
+  const dm=/^Digit([1-4])$/.exec(e.code||'');
+  if(app.p && dm && (e.altKey || mod) && !e.shiftKey){ e.preventDefault(); switchTab(TABS[+dm[1]-1]); return; }
+  if(e.key==='?'){ e.preventDefault(); showShortcuts(); return; }
+  if(!app.p) return;
+  const view = app.tab==='draw'?drawView : app.tab==='stitch'?stitchView : app.tab==='make'?makeView : null;
+  if(!mod && !e.altKey && view){ if(e.key==='f'){ view.fit(); return; } if(e.key==='='||e.key==='+'){ view.zoomCenter(1.4); return; } if(e.key==='-'||e.key==='_'){ view.zoomCenter(1/1.4); return; } }
+  if(app.tab==='make'){
+    if(mod && k==='z'){ e.preventDefault(); e.shiftKey ? redoDraw() : undoDraw(); }
+    else if(mod && k==='y'){ e.preventDefault(); redoDraw(); }
     return;
   }
-  if(!app.p || app.tab!=='stitch' || e.target.closest('input,select,textarea')) return;
-  if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); }
-  else if(e.key==='m'){ setMarking(!stitchView.o.marking); }
-  else if(e.key==='f'){ stitchView.fit(); }
+  if(app.tab==='draw'){
+    if(mod && k==='z'){ e.preventDefault(); e.shiftKey ? redoDraw() : undoDraw(); return; }
+    if(mod && k==='y'){ e.preventDefault(); redoDraw(); return; }
+    if(mod && k==='a'){ e.preventDefault(); selectAll(); return; }
+    if(mod || e.altKey) return;
+    if(k==='b'||k==='p') setTool('pen'); else if(k==='e') setTool('erase'); else if(k==='g') setTool('fill'); else if(k==='i') setTool('pick');
+    else if(k==='v') setTool('select');
+    else if(k==='l') { setShape('line'); $('#shapePop').hidden=true; } else if(k==='r') { setShape('rect'); $('#shapePop').hidden=true; }
+    else if(k==='o') { setShape('oval'); $('#shapePop').hidden=true; } else if(k==='h') { setShape('heart'); $('#shapePop').hidden=true; }
+    else if(k==='u'){ draw.filled=!draw.filled; updateDrawUI(); toast(draw.filled?'Filled shapes':'Outlined shapes'); }
+    else if(k==='m') $('#mirrorBtn').click();
+    else if(['1','2','3'].includes(k)){ draw.size=+k; updateDrawUI(); }
+    else if(draw.sel && (e.key==='Delete'||e.key==='Backspace')){ e.preventDefault(); selAction('delete'); }
+    else if(draw.sel && k==='d'){ selAction('dup'); }
+    else if(e.key==='Escape'){ if(draw.sel){ draw.sel=null; updateSelUI(); drawView.draw(); } else $('#shapePop').hidden=true; }
+    return;
+  }
+  if(app.tab==='stitch'){
+    if(mod && k==='z'){ e.preventDefault(); undo(); }
+    else if(k==='m' && !mod){ setMarking(!stitchView.o.marking); }
+    else if(e.key==='Escape'){ setHighlight(-1); }
+  }
 });
 
 [['#styleSeg','style'],['#labelsSeg','labels'],['#sizeSeg','size'],['#paperSeg','paper']].forEach(([sel,key])=>{
