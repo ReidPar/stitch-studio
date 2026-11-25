@@ -4674,11 +4674,14 @@ function useNamespace(ns){
 }
 function deviceIndex(){ try{ return JSON.parse(localStorage.getItem(DEVICE_NS+'index'))||[]; }catch(e){ return []; } }
 // Patterns made while signed out stay on the device. On sign-in, offer to move them into the account.
-async function offerDeviceMove(){
+async function offerDeviceMove(force){
   const dev=deviceIndex(); if(!dev.length || !cloud.user) return;
+  const askedKey='xw:moveAsked:'+cloud.user.uid;
+  if(!force){ const asked=new Set(store.get(askedKey)||[]); if(dev.every(e=>asked.has(e.id))) return; }   // already answered for these
   const n=dev.length;
   const v=await dialog(`Add ${n} pattern${n>1?'s':''} to your account?`, `${n>1?'These patterns were':'This pattern was'} made on this device while signed out. Add ${n>1?'them':'it'} to ${cloud.user.email||'your account'} so ${n>1?'they sync':'it syncs'} everywhere, or leave ${n>1?'them':'it'} on this device for when you're signed out.`, [{label:'Leave on device',value:false},{label:'Add to account',value:true,primary:true}]);
-  if(!v || !cloud.user || NS===DEVICE_NS) return;
+  if(!v){ store.set(askedKey, dev.map(e=>e.id)); if(!force) toast('Okay. You can add them later from your account menu.'); return; }
+  if(!cloud.user || NS===DEVICE_NS) return;
   for(const e of dev){
     let o=null; try{ o=JSON.parse(localStorage.getItem(DEVICE_NS+'p:'+e.id)); }catch(_){}
     if(!o) continue;
@@ -4731,7 +4734,9 @@ function signInError(e){
 async function acctClick(){
   if(!cloud.user){ signIn(); return; }
   const u=cloud.user, st={synced:'Everything is synced.',syncing:'Syncing now…',error:"The last sync didn't go through. It will try again.",offline:"You're offline. Changes will sync when you're back online."}[cloud.status]||'';
-  const v=await dialog(`Signed in as ${u.displayName||u.email}`, `${u.email||''}\n\nYour patterns and stitch progress sync automatically on every device where you sign in. ${st}\n\nSigning out removes this account's patterns from this device (they stay safe in your account).`, [{label:'Sign out',value:'out'},{label:'Close',value:null,primary:true}]);
+  const nd=deviceIndex().length;
+  const v=await dialog(`Signed in as ${u.displayName||u.email}`, `${u.email||''}\n\nYour patterns and stitch progress sync automatically on every device where you sign in. ${st}\n\nSigning out removes this account's patterns from this device (they stay safe in your account).`, [{label:'Sign out',value:'out'}, ...(nd?[{label:`Add ${nd} device pattern${nd>1?'s':''}…`,value:'move'}]:[]), {label:'Close',value:null,primary:true}]);
+  if(v==='move'){ offerDeviceMove(true); return; }
   if(v==='out'){
     if(app.p) saveNow();
     working(true,'Signing out…');
