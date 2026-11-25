@@ -195,7 +195,8 @@ details[open] summary::after{content:'–'}
 .drawbar::-webkit-scrollbar{display:none}
 .drawbar .seg button{display:flex;align-items:center;gap:6px;padding:7px 12px}
 .drawbar .seg button svg{width:18px;height:18px;flex:none}
-.shpico{display:flex}
+.shpico,.mirico{display:flex}
+.mirico svg{width:18px;height:18px}
 .drawbar .seg.sizes button{padding:7px 10px;min-width:36px;justify-content:center}
 .drawbar .seg.sizes i{display:block;background:currentColor;border-radius:2px}
 .togglebtn{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:11px;padding:7px 12px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap;flex:none}
@@ -356,8 +357,8 @@ kbd{display:inline-block;font:600 12px 'DM Sans',system-ui,sans-serif;background
   .desk-only{display:none!important}
   .toast{bottom:96px}
   .mob-only{display:flex!important}
-  .drawbar .seg.tools button span:not(.shpico),.togglebtn span{display:none}
-  .shpico{display:flex}
+  .drawbar .seg.tools button span:not(.shpico),.togglebtn span:not(.mirico){display:none}
+  .shpico,.mirico{display:flex}
   .drawbar .seg button{padding:7px 9px}
   .togglebtn{padding:7px 9px}
   .tabbtn{padding:6px 12px}
@@ -535,7 +536,7 @@ kbd{display:inline-block;font:600 12px 'DM Sans',system-ui,sans-serif;background
           <button data-v="2" aria-label="Brush size 2"><i style="width:9px;height:9px"></i></button>
           <button data-v="3" aria-label="Brush size 3"><i style="width:13px;height:13px"></i></button>
         </div>
-        <button class="togglebtn" id="mirrorBtn" aria-pressed="false" title="Mirror left and right (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 8v2M12 13v2M12 18v3"/><path d="M9 7L3 12l6 5zM15 7l6 5-6 5z"/></svg><span>Mirror</span></button>
+        <button class="togglebtn" id="mirrorBtn" aria-pressed="false" title="Mirror: off (M to change)"><span class="mirico"></span><span id="mirLbl">Mirror</span></button>
         <div class="hdr-spacer"></div>
         <button class="icon-btn desk-only" id="dUndo" title="Undo" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
         <button class="icon-btn desk-only" id="dRedo" title="Redo" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
@@ -4192,7 +4193,7 @@ const ICON_EYE_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 /* ---------- draw tab ---------- */
-const draw = { tool:'pen', size:1, mirror:false, color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
+const draw = { tool:'pen', size:1, mx:false, my:false, color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
 const drawView = new ChartView($('#drawCanvas'), { mode:'color', progress:false, drawing:true,
   onDrawStart:drawStart, onDrawMove:(c,r)=>paintAt(c,r), onDrawDrag:drawDrag, onDrawEnd:drawEnd, onDrawCancel:cancelStroke, overlay:drawOverlay,
   drawAnywhere:()=>draw.tool==='select' || draw.tool==='shape' });
@@ -4214,11 +4215,28 @@ async function restoreSnap(sn){
 }
 // Wrap a Make-tab change so it can be undone
 function designChange(label, fn){ const before=snapshot(); fn(); afterPaletteChange(); recordSnap(before,label); }
+// Mirror: copy across the vertical middle (mx), the horizontal middle (my), or both.
+const MIRROR_MODES=[[false,false,'Off'],[true,false,'Left ↔ right'],[false,true,'Top ↕ bottom'],[true,true,'All four corners']];
+const MIR_ICONS={
+  off:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 8v2M12 13v2M12 18v3"/><path d="M9 7L3 12l6 5zM15 7l6 5-6 5z"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 8v2M12 13v2M12 18v3"/><path d="M9 7L3 12l6 5zM15 7l6 5-6 5z"/></svg>',
+  y:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2M8 12h2M13 12h2M18 12h3"/><path d="M7 9l5-6 5 6zM7 15l5 6 5-6z"/></svg>',
+  xy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2.5M12 7v3M12 14v3M12 19.5V22M2 12h2.5M7 12h3M14 12h3M19.5 12H22"/><path d="M4 4h5v5zM20 4h-5v5zM4 20h5v-5zM20 20h-5v-5z"/></svg>'};
+function mirrorList(list){
+  const p=app.p, out=new Set(list); if(!draw.mx && !draw.my) return [...out];
+  for(const i of list){ const x=i%p.w, y=(i/p.w)|0, X=p.w-1-x, Y=p.h-1-y;
+    if(draw.mx) out.add(y*p.w+X); if(draw.my) out.add(Y*p.w+x); if(draw.mx&&draw.my) out.add(Y*p.w+X); }
+  return [...out];
+}
+function cycleMirror(){
+  const k=MIRROR_MODES.findIndex(m=>m[0]===draw.mx && m[1]===draw.my), n=MIRROR_MODES[(k+1)%MIRROR_MODES.length];
+  draw.mx=n[0]; draw.my=n[1]; updateDrawUI(); drawView.draw();
+  toast(n[2]==='Off' ? 'Mirror off' : `Mirror: ${n[2].toLowerCase()}`);
+}
 function brushCells(c,r){
   const p=app.p, n=draw.size, o=n===3?-1:0, out=[];
   for(let dy=0;dy<n;dy++) for(let dx=0;dx<n;dx++){ const x=c+dx+o, y=r+dy+o; if(x>=0&&y>=0&&x<p.w&&y<p.h) out.push(y*p.w+x); }
-  if(draw.mirror){ const m=out.map(i=>{ const x=i%p.w, y=(i/p.w)|0; return y*p.w+(p.w-1-x); }); out.push(...m); }
-  return out;
+  return mirrorList(out);
 }
 function setCell(i,v){
   const p=app.p; if(p.grid[i]===v) return;
@@ -4248,7 +4266,7 @@ function drawStart(cell){
   if(draw.tool!=='erase' && (!p.palette.length || !p.palette[draw.color] || p.palette[draw.color].skip)){ toast('Add a color first with the + button'); return false; }
   draw.st={map:new Map()};
   if(draw.tool==='shape'){ $('#shapePop').hidden=true; draw.a=cell; draw.b=cell; shapePreview(); return true; }
-  if(draw.tool==='fill'){ const v=drawValue(); floodFill(cell.c,cell.r,v); if(draw.mirror){ const mx=p.w-1-cell.c; if(mx!==cell.c) floodFill(mx,cell.r,v); } commitStroke(); return false; }
+  if(draw.tool==='fill'){ const v=drawValue(); for(const i of mirrorList([cell.r*p.w+cell.c])) floodFill(i%p.w,(i/p.w)|0,v); commitStroke(); return false; }
   paintAt(cell.c,cell.r); drawView.bmpDirty=true; return true;
 }
 function revertMap(){ const p=app.p; for(const [i,[g,d]] of draw.st.map){ p.grid[i]=g; p.done[i]=d; } draw.st.map.clear(); }
@@ -4291,8 +4309,7 @@ function shapeCells(a,b){
     }
     for(let j=0;j<h;j++) for(let i=0;i<w;i++) if(keep[j*w+i]) add(X0+i,Y0+j);
   }
-  if(draw.mirror){ for(const i of [...out]){ const x=i%p.w, y=(i/p.w)|0; out.add(y*p.w+(p.w-1-x)); } }
-  return out;
+  return new Set(mirrorList([...out]));
 }
 function shapePreview(){ if(!draw.st||!draw.a) return; revertMap(); const v=draw.color; for(const i of shapeCells(draw.a,draw.b)) setCell(i,v); drawView.invalidate(); }
 function setShape(sh){ draw.shape=sh; draw.tool='shape'; $('#shapeToolBtn .shpico').innerHTML=$(`#shapeSeg button[data-v="${sh}"]`).innerHTML; updateDrawUI(); renderDrawPalette(); }
@@ -4370,7 +4387,11 @@ function setTool(t){
 }
 function updateDrawUI(){
   setSeg('#toolSeg', draw.tool); setSeg('#brushSeg', String(draw.size));
-  $('#mirrorBtn').setAttribute('aria-pressed', String(draw.mirror));
+  const on=draw.mx||draw.my, mode=MIRROR_MODES.find(m=>m[0]===draw.mx && m[1]===draw.my);
+  $('#mirrorBtn').setAttribute('aria-pressed', String(on));
+  $('#mirrorBtn .mirico').innerHTML = draw.mx&&draw.my ? MIR_ICONS.xy : draw.my ? MIR_ICONS.y : MIR_ICONS.x;
+  $('#mirLbl').textContent = !on ? 'Mirror' : draw.mx&&draw.my ? 'Mirror: both' : draw.my ? 'Mirror: top/bottom' : 'Mirror: left/right';
+  $('#mirrorBtn').title = `Mirror: ${mode[2].toLowerCase()} (M to change)`;
   $('#dUndo').disabled=$('#dUndoM').disabled=$('#mUndo').disabled=!draw.undo.length; $('#dRedo').disabled=$('#dRedoM').disabled=$('#mRedo').disabled=!draw.redo.length;
   $$('#brushSeg button').forEach(b=>b.disabled = ['fill','pick','select'].includes(draw.tool) || (draw.tool==='shape' && draw.filled && draw.shape!=='line'));
   setSeg('#shapeSeg', draw.shape); setSeg('#fillSeg', draw.filled?'filled':'outline');
@@ -4382,9 +4403,11 @@ function drawOverlay(ctx,v){
     ctx.save(); ctx.fillStyle='rgba(46,94,115,.10)'; ctx.fillRect(x,y,w,h);
     ctx.lineWidth=1.5; ctx.strokeStyle='#fff'; ctx.strokeRect(x,y,w,h); ctx.setLineDash([5,4]); ctx.strokeStyle='#2A2420'; ctx.strokeRect(x,y,w,h); ctx.restore();
   }
-  if(!draw.mirror || !v.p || draw.tool==='select') return;
-  const x=Math.round(v.ox+v.p.w/2*v.s)+.5, y0=Math.max(0,v.oy), y1=Math.min(v.H,v.oy+v.p.h*v.s);
-  ctx.save(); ctx.setLineDash([6,5]); ctx.strokeStyle='#C2412D'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y0-8); ctx.lineTo(x,y1+8); ctx.stroke(); ctx.restore();
+  if(!(draw.mx||draw.my) || !v.p || draw.tool==='select') return;
+  ctx.save(); ctx.setLineDash([6,5]); ctx.strokeStyle='#C2412D'; ctx.lineWidth=2; ctx.beginPath();
+  if(draw.mx){ const x=Math.round(v.ox+v.p.w/2*v.s)+.5, y0=Math.max(0,v.oy), y1=Math.min(v.H,v.oy+v.p.h*v.s); ctx.moveTo(x,y0-8); ctx.lineTo(x,y1+8); }
+  if(draw.my){ const y=Math.round(v.oy+v.p.h/2*v.s)+.5, x0=Math.max(0,v.ox), x1=Math.min(v.W,v.ox+v.p.w*v.s); ctx.moveTo(x0-8,y); ctx.lineTo(x1+8,y); }
+  ctx.stroke(); ctx.restore();
 }
 function renderDrawPalette(){
   const p=app.p, wrap=$('#dchips'); if(!p || !wrap) return; wrap.innerHTML='';
@@ -4491,7 +4514,7 @@ function createBlank(w,h){
   const s=defaultSettings(w,h); Object.assign(s,{w,h,blank:true,pixel:true,cleanup:'off'});
   const p={id:uid(), name:'New design', created:Date.now(), updated:Date.now(), settings:s, edited:true, src:null, w, h, folder:libState.folder||null,
     grid:new Uint16Array(w*h).fill(EMPTY), done:new Uint8Array(w*h), palette:STARTER.map((rgb,i)=>({rgb, sym:SYMBOLS[i], label:'', skip:false}))};
-  app.p=p; app.src=null; draw.tool='pen'; draw.size=1; draw.mirror=false;
+  app.p=p; app.src=null; draw.tool='pen'; draw.size=1; draw.mx=false; draw.my=false;
   saveNow(); showEditor('draw'); draw.color=2; renderDrawPalette();
 }
 
@@ -4874,7 +4897,7 @@ function showShortcuts(){
     ['Hold while drawing a shape: perfect square, circle or straight line', k('Shift')],
     ['Select', k('V')], ['Select everything', k(C,'A')],
     ['Duplicate / delete selection', `${k('D')} / ${k('Delete')}`], ['Deselect', k('Esc')],
-    ['Mirror on/off', k('M')], ['Brush or line size', k('1','2','3')],
+    ['Mirror: off → left/right → top/bottom → both', k('M')], ['Brush or line size', k('1','2','3')],
     ['Stitch'],
     ['Switch between Move and Mark', k('M')], ['Show all colors', k('Esc')],
   ];
@@ -4887,7 +4910,7 @@ $('#homeBtn').onclick=showLibrary;
 $('#blankBtn').onclick=openBlankDialog;
 $$('#toolSeg button').forEach(b=>b.onclick=()=>setTool(b.dataset.v));
 $$('#brushSeg button').forEach(b=>b.onclick=()=>{ draw.size=+b.dataset.v; if(draw.tool==='fill'||draw.tool==='pick') draw.tool='pen'; updateDrawUI(); renderDrawPalette(); });
-$('#mirrorBtn').onclick=()=>{ draw.mirror=!draw.mirror; updateDrawUI(); drawView.draw(); toast(draw.mirror?'Mirror on: drawing is copied to the other side':'Mirror off'); };
+$('#mirrorBtn').onclick=cycleMirror;
 $('#dUndo').onclick=$('#dUndoM').onclick=undoDraw; $('#dRedo').onclick=$('#dRedoM').onclick=redoDraw;
 $('#dFit').onclick=()=>drawView.fit();
 $('#dZoomIn').onclick=()=>drawView.zoomCenter(1.4);
