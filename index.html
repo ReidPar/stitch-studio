@@ -396,6 +396,11 @@ header.top{padding-top:calc(10px + env(safe-area-inset-top));padding-left:calc(1
   .crop-actions{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
   .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
 }
+/* Opened from the Home Screen: extra room so iOS's blurred status-bar area doesn't sit on the header */
+@media (display-mode: standalone){
+  header.top{padding-top:calc(52px + env(safe-area-inset-top))}
+  .crop-top{padding-top:calc(52px + env(safe-area-inset-top))}
+}
 </style>
 </head>
 <body>
