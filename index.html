@@ -244,6 +244,7 @@ details[open] summary::after{content:'–'}
 .shapepop .row1 button svg{width:22px;height:22px}
 .shapepop .row1 button[aria-pressed="true"]{background:var(--linen-2);border-color:var(--ink)}
 .shapepop .seg button{padding:6px 10px;font-size:13px}
+#erasePop{min-width:260px}
 .selbar{position:absolute;left:50%;bottom:68px;transform:translateX(-50%);z-index:4;display:flex;gap:4px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:0 6px 20px rgba(60,40,20,.14)}
 .selbar button{border:0;background:transparent;border-radius:999px;padding:7px 12px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .selbar button:hover{background:var(--linen-2)}
@@ -560,7 +561,7 @@ header.top{padding-top:calc(10px + env(safe-area-inset-top));padding-left:calc(1
       <div class="drawbar">
         <div class="seg tools" id="toolSeg">
           <button data-v="pen" title="Pen (B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg><span>Pen</span></button>
-          <button data-v="erase" title="Eraser (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20h11"/><path d="M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L11 19H8z"/><path d="M9 11l4.5 4.5"/></svg><span>Eraser</span></button>
+          <button data-v="erase" id="eraseToolBtn" title="Eraser (E) · tap again for Area mode"><span class="shpico eraico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20h11"/><path d="M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L11 19H8z"/><path d="M9 11l4.5 4.5"/></svg></span><span id="eraLbl">Eraser</span></button>
           <button data-v="shape" id="shapeToolBtn" title="Shapes (U) · L line, R rectangle, O oval, H heart"><span class="shpico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="1"/></svg></span><span>Shapes</span></button>
           <button data-v="select" title="Select and move (V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="3 3"><rect x="4" y="4" width="16" height="16" rx="1"/></svg><span>Select</span></button>
           <button data-v="fill" title="Fill (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l7-7 7 7-7 7z"/><path d="M4 12h14"/><path d="M20 15s2 2.4 2 3.8a2 2 0 0 1-4 0C18 17.4 20 15 20 15z"/></svg><span>Fill</span></button>
@@ -586,6 +587,13 @@ header.top{padding-top:calc(10px + env(safe-area-inset-top));padding-left:calc(1
             <button data-v="heart" title="Heart (H)" aria-label="Heart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg></button>
           </div>
           <div class="seg" id="fillSeg"><button data-v="outline">Outline</button><button data-v="filled">Filled</button></div>
+        </div>
+        <div class="shapepop" id="erasePop" hidden>
+          <div class="seg" id="eraseModeSeg"><button data-v="brush">Brush</button><button data-v="area">Area</button></div>
+          <div id="eraseMatchWrap">
+            <div class="note" style="margin:2px 2px 6px">Area erases everything connected to where you tap that matches:</div>
+            <div class="seg" id="eraseMatchSeg"><button data-v="same">Same color</button><button data-v="similar">Similar</button><button data-v="any">Any color</button></div>
+          </div>
         </div>
         <div class="selbar" id="selBar" hidden>
           <button id="selDup" title="Duplicate (D)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg><span>Duplicate</span></button>
@@ -688,7 +696,7 @@ header.top{padding-top:calc(10px + env(safe-area-inset-top));padding-left:calc(1
 
 <div class="cropper" id="cropper" hidden>
   <div class="crop-top">
-    <div><h4>Crop your picture</h4><p>Drag the corners to resize and inside the box to move it. Pinch or scroll to zoom.</p></div>
+    <div><h4>Crop your picture</h4><p>Drag the corners or sides to resize and inside the box to move it. Pinch or scroll to zoom.</p></div>
     <div class="seg" id="ratioSeg"><button data-v="0">Free</button><button data-v="1">Square</button><button data-v="0.8">Tall</button><button data-v="1.25">Wide</button></div>
   </div>
   <div class="crop-stage"><canvas id="cropCanvas"></canvas>
@@ -3740,6 +3748,12 @@ function openCropper(src, crop){
       ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.strokeRect(X,Y,RW,RH);
       const L=Math.max(8,Math.min(22,RW/3,RH/3)); ctx.lineWidth=4; ctx.lineCap='square'; ctx.beginPath();
       [[X,Y,1,1],[X+RW,Y,-1,1],[X,Y+RH,1,-1],[X+RW,Y+RH,-1,-1]].forEach(([cx,cy,sx,sy])=>{ ctx.moveTo(cx-sx*2,cy+sy*L); ctx.lineTo(cx-sx*2,cy-sy*2); ctx.lineTo(cx+sx*L,cy-sy*2); }); ctx.stroke();
+      // side grab bars (middle of each edge)
+      ctx.lineCap='round'; ctx.lineWidth=5; ctx.beginPath();
+      const ex=Math.min(26,RW/4), ey=Math.min(26,RH/4);
+      if(RW>48){ ctx.moveTo(X+RW/2-ex/2,Y-1); ctx.lineTo(X+RW/2+ex/2,Y-1); ctx.moveTo(X+RW/2-ex/2,Y+RH+1); ctx.lineTo(X+RW/2+ex/2,Y+RH+1); }
+      if(RH>48){ ctx.moveTo(X-1,Y+RH/2-ey/2); ctx.lineTo(X-1,Y+RH/2+ey/2); ctx.moveTo(X+RW+1,Y+RH/2-ey/2); ctx.lineTo(X+RW+1,Y+RH/2+ey/2); }
+      ctx.stroke();
       const LL=Math.max(r.w,r.h), big=LL>300, sw=big?Math.max(4,Math.round(r.w/LL*100)):Math.max(4,r.w), sh=big?Math.max(4,Math.round(r.h/LL*100)):Math.max(4,r.h);
       $('#cropSize').textContent = `${(r.w===W&&r.h===H)?'Whole picture · ':''}${r.w} × ${r.h} px → ${sw} × ${sh} stitches${big?' (scaled down)':''}`;
     };
@@ -3752,6 +3766,13 @@ function openCropper(src, crop){
     const toImg=p=>({x:(p.sx-ox)/k, y:(p.sy-oy)/k});
     const corners=()=>[[r.x,r.y,r.x+r.w,r.y+r.h],[r.x+r.w,r.y,r.x,r.y+r.h],[r.x,r.y+r.h,r.x+r.w,r.y],[r.x+r.w,r.y+r.h,r.x,r.y]];
     const hitCorner=p=>{ let best=null, bd=28; for(const [cx,cy,ax,ay] of corners()){ const d=Math.hypot(ox+cx*k-p.sx, oy+cy*k-p.sy); if(d<bd){ bd=d; best={ax,ay}; } } return best; };
+    // Edges: near the middle bar, or anywhere along an edge away from the corners
+    const hitEdge=p=>{
+      const X=ox+r.x*k, Y=oy+r.y*k, X2=X+r.w*k, Y2=Y+r.h*k, t=16, inX=p.sx>X+18&&p.sx<X2-18, inY=p.sy>Y+18&&p.sy<Y2-18;
+      if(inX && Math.abs(p.sy-Y)<t) return 't'; if(inX && Math.abs(p.sy-Y2)<t) return 'b';
+      if(inY && Math.abs(p.sx-X)<t) return 'l'; if(inY && Math.abs(p.sx-X2)<t) return 'r';
+      return null;
+    };
     const inside=q=>q.x>=r.x&&q.x<=r.x+r.w&&q.y>=r.y&&q.y<=r.y+r.h;
     const zoomAt=(sx,sy,f)=>{ const nk=clamp(k*f, fitAllK()*0.5, maxK()*1.5); const gx=(sx-ox)/k, gy=(sy-oy)/k; k=nk; ox=sx-gx*k; oy=sy-gy*k; draw(); };
     const startPinch=()=>{ const [a,b]=[...ptrs.values()]; pinch={d:Math.hypot(a.sx-b.sx,a.sy-b.sy)||1, mx:(a.sx+b.sx)/2, my:(a.sy+b.sy)/2, k, ox, oy}; drag=null; };
@@ -3760,15 +3781,16 @@ function openCropper(src, crop){
       const p=pos(e); ptrs.set(e.pointerId,p);
       if(ptrs.size===2){ startPinch(); return; }
       if(ptrs.size>2) return;
-      const hc=hitCorner(p), q=toImg(p);
+      const hc=hitCorner(p), he=hc?null:hitEdge(p), q=toImg(p);
       if(hc) drag={mode:'resize', ...hc};
+      else if(he) drag={mode:'edge', side:he, x0:r.x, y0:r.y, x1:r.x+r.w, y1:r.y+r.h};
       else if(inside(q)) drag={mode:'move', dx:q.x-r.x, dy:q.y-r.y};
       else drag={mode:'pan', sx:p.sx, sy:p.sy, ox, oy};
     },sig);
     cv.addEventListener('pointermove',e=>{
       const p=pos(e);
       if(!ptrs.has(e.pointerId)){ // hover cursor
-        const q=toImg(p); cv.style.cursor = hitCorner(p) ? 'nwse-resize' : inside(q) ? 'move' : 'grab'; return;
+        const q=toImg(p), he=hitEdge(p); cv.style.cursor = hitCorner(p) ? 'nwse-resize' : he ? (he==='l'||he==='r'?'ew-resize':'ns-resize') : inside(q) ? 'move' : 'grab'; return;
       }
       ptrs.set(e.pointerId,p);
       if(ptrs.size>=2 && pinch){
@@ -3780,6 +3802,17 @@ function openCropper(src, crop){
       const q=toImg(p);
       if(drag.mode==='pan'){ ox=drag.ox+p.sx-drag.sx; oy=drag.oy+p.sy-drag.sy; }
       else if(drag.mode==='move'){ r.x=clamp(Math.round(q.x-drag.dx),0,W-r.w); r.y=clamp(Math.round(q.y-drag.dy),0,H-r.h); }
+      else if(drag.mode==='edge'){
+        const {side,x0,y0,x1,y1}=drag, px=clamp(Math.round(q.x),0,W), py=clamp(Math.round(q.y),0,H);
+        let nx0=x0, nx1=x1, ny0=y0, ny1=y1;
+        if(side==='l') nx0=Math.min(px,x1-1); if(side==='r') nx1=Math.max(px,x0+1);
+        if(side==='t') ny0=Math.min(py,y1-1); if(side==='b') ny1=Math.max(py,y0+1);
+        if(ratio){   // keep the chosen shape: grow the other dimension around its center
+          if(side==='l'||side==='r'){ let w=nx1-nx0, h=Math.max(1,Math.round(w/ratio)); if(h>H){ h=H; w=Math.max(1,Math.round(h*ratio)); if(side==='l') nx0=nx1-w; else nx1=nx0+w; } ny0=Math.round(clamp((y0+y1)/2-h/2,0,H-h)); ny1=ny0+h; }
+          else { let h=ny1-ny0, w=Math.max(1,Math.round(h*ratio)); if(w>W){ w=W; h=Math.max(1,Math.round(w/ratio)); if(side==='t') ny0=ny1-h; else ny1=ny0+h; } nx0=Math.round(clamp((x0+x1)/2-w/2,0,W-w)); nx1=nx0+w; }
+        }
+        r={x:nx0, y:ny0, w:nx1-nx0, h:ny1-ny0};
+      }
       else {
         const ax=drag.ax, ay=drag.ay, px=clamp(Math.round(q.x),0,W), py=clamp(Math.round(q.y),0,H), sx=px>=ax?1:-1, sy=py>=ay?1:-1;
         let w=Math.max(1,Math.min(Math.abs(px-ax), sx>0?W-ax:ax)), h=Math.max(1,Math.min(Math.abs(py-ay), sy>0?H-ay:ay));
@@ -3794,7 +3827,7 @@ function openCropper(src, crop){
       if(ptrs.size===1 && pinch){ pinch=null; const p=[...ptrs.values()][0]; drag={mode:'pan', sx:p.sx, sy:p.sy, ox, oy}; return; }
       if(ptrs.size===0){ const was=drag&&drag.mode; drag=null; pinch=null;
         const off = ox+r.x*k<0 || oy+r.y*k<0 || ox+(r.x+r.w)*k>cw || oy+(r.y+r.h)*k>ch;
-        if(was==='resize' || (was==='move' && off)) settleSoon(); }
+        if(was==='resize' || was==='edge' || (was==='move' && off)) settleSoon(); }
     };
     ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,end,sig));
     cv.addEventListener('wheel',e=>{ e.preventDefault(); stopAuto(); const p=pos(e); zoomAt(p.sx,p.sy,Math.exp(-e.deltaY*(e.ctrlKey?0.012:0.0018))); },{passive:false,signal:ac.signal});
@@ -4229,7 +4262,7 @@ const ICON_EYE_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 /* ---------- draw tab ---------- */
-const draw = { tool:'pen', size:1, mx:false, my:false, color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
+const draw = { tool:'pen', size:1, mx:false, my:false, eraseMode:'brush', eraseMatch:'similar', color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
 const drawView = new ChartView($('#drawCanvas'), { mode:'color', progress:false, drawing:true,
   onDrawStart:drawStart, onDrawMove:(c,r)=>paintAt(c,r), onDrawDrag:drawDrag, onDrawEnd:drawEnd, onDrawCancel:cancelStroke, overlay:drawOverlay,
   drawAnywhere:()=>draw.tool==='select' || draw.tool==='shape' });
@@ -4300,11 +4333,33 @@ function drawStart(cell){
   }
   if(draw.tool==='select') return selectStart(cell);
   if(draw.tool!=='erase' && (!p.palette.length || !p.palette[draw.color] || p.palette[draw.color].skip)){ toast('Add a color first with the + button'); return false; }
+  if(draw.tool==='erase' && draw.eraseMode==='area'){ $('#erasePop').hidden=true; return areaErase(cell); }
   draw.st={map:new Map()};
   if(draw.tool==='shape'){ $('#shapePop').hidden=true; draw.a=cell; draw.b=cell; shapePreview(); return true; }
   if(draw.tool==='fill'){ const v=drawValue(); for(const i of mirrorList([cell.r*p.w+cell.c])) floodFill(i%p.w,(i/p.w)|0,v); commitStroke(); return false; }
   paintAt(cell.c,cell.r); drawView.bmpDirty=true; return true;
 }
+// Area eraser: remove the connected region around the tapped stitch (same / similar / any color)
+function areaErase(cell){
+  const p=app.p, w=p.w, h=p.h, key=i=>{ const v=p.grid[i]; return (v===EMPTY || p.palette[v].skip) ? -1 : v; };
+  const starts=mirrorList([cell.r*w+cell.c]).filter(i=>key(i)>=0);
+  if(!starts.length){ toast('Tap on stitches to erase that area'); return false; }
+  const labs=p.palette.map(c=>rgbToLab(...c.rgb)), mode=draw.eraseMatch, TOL=14;
+  draw.st={map:new Map()}; const seen=new Uint8Array(w*h);
+  for(const s0 of starts){
+    if(seen[s0]) continue; const target=key(s0), tl=labs[target];
+    const ok=i=>{ const k=key(i); if(k<0) return false; if(mode==='any') return true; if(mode==='same') return k===target; return k===target || dE(labs[k],tl)<=TOL; };
+    const stack=[s0]; seen[s0]=1;
+    while(stack.length){ const i=stack.pop(); setCell(i,EMPTY); const x=i%w, y=(i/w)|0;
+      for(const j of [x>0?i-1:-1, x<w-1?i+1:-1, y>0?i-w:-1, y<h-1?i+w:-1]) if(j>=0 && !seen[j] && ok(j)){ seen[j]=1; stack.push(j); } }
+  }
+  const n=draw.st.map.size; commitStroke();
+  toast(`Erased ${n.toLocaleString()} stitch${n===1?'':'es'}. Undo if that was too much.`);
+  return false;
+}
+const ERA_BRUSH_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20h11"/><path d="M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L11 19H8z"/><path d="M9 11l4.5 4.5"/></svg>';
+const ERA_AREA_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21h11"/><path d="M6.5 16.5l7.5-7.5a1.8 1.8 0 0 1 2.5 0l2 2a1.8 1.8 0 0 1 0 2.5L12 20H9.5z"/><path d="M2.5 3.5h6v6h-6z" stroke-dasharray="2 2"/></svg>';
+function setEraseMode(m){ draw.eraseMode=m; draw.tool='erase'; updateDrawUI(); renderDrawPalette(); }
 function revertMap(){ const p=app.p; for(const [i,[g,d]] of draw.st.map){ p.grid[i]=g; p.done[i]=d; } draw.st.map.clear(); }
 function drawDrag(cell, e){
   if(draw.tool==='shape' && draw.a){ draw.b = e && e.shiftKey ? constrain(draw.a, cell) : cell; shapePreview(); return true; }
@@ -4416,9 +4471,10 @@ function redoDraw(){
   const p=app.p; e.cells.forEach((i,k)=>{ p.grid[i]=e.after[k]; p.done[i]=0; });
   afterDrawChange();
 }
-function setTool(t){
+function setTool(t, fromButton){
   if(t==='shape' && draw.tool==='shape'){ $('#shapePop').hidden=!$('#shapePop').hidden; return; }
-  draw.tool=t; if(t!=='select'){ draw.sel=null; } $('#shapePop').hidden = t!=='shape';
+  if(t==='erase' && draw.tool==='erase' && fromButton){ $('#erasePop').hidden=!$('#erasePop').hidden; return; }
+  draw.tool=t; if(t!=='select'){ draw.sel=null; } $('#shapePop').hidden = t!=='shape'; if(t!=='erase') $('#erasePop').hidden=true;
   updateDrawUI(); updateSelUI(); renderDrawPalette(); drawView.draw();
 }
 function updateDrawUI(){
@@ -4431,6 +4487,11 @@ function updateDrawUI(){
   $('#dUndo').disabled=$('#dUndoM').disabled=$('#mUndo').disabled=!draw.undo.length; $('#dRedo').disabled=$('#dRedoM').disabled=$('#mRedo').disabled=!draw.redo.length;
   $$('#brushSeg button').forEach(b=>b.disabled = ['fill','pick','select'].includes(draw.tool) || (draw.tool==='shape' && draw.filled && draw.shape!=='line'));
   setSeg('#shapeSeg', draw.shape); setSeg('#fillSeg', draw.filled?'filled':'outline');
+  setSeg('#eraseModeSeg', draw.eraseMode); setSeg('#eraseMatchSeg', draw.eraseMatch); $('#eraseMatchWrap').hidden = draw.eraseMode!=='area';
+  $('#eraLbl').textContent = draw.eraseMode==='area' ? 'Erase area' : 'Eraser';
+  $('#eraseToolBtn .eraico').innerHTML = draw.eraseMode==='area' ? ERA_AREA_ICON : ERA_BRUSH_ICON;
+  $('#eraseToolBtn').title = draw.eraseMode==='area' ? 'Erase area (Shift+E) · tap again for options' : 'Eraser (E) · tap again for Area mode';
+  if(draw.tool==='erase' && draw.eraseMode==='area') $$('#brushSeg button').forEach(b=>b.disabled=true);
   $('#drawCanvas').style.cursor = draw.tool==='select' ? 'default' : 'crosshair';
 }
 function drawOverlay(ctx,v){
@@ -4933,6 +4994,7 @@ function showShortcuts(){
     ['This list', k('?')],
     ['Draw'],
     ['Pen / Eraser / Fill / Pick color', k('B','E','G','I')],
+    ['Erase a whole area (like fill)', `${k('Shift')} + ${k('E')}`],
     ['Shapes: line / rectangle / oval / heart', k('L','R','O','H')],
     ['Outline or filled shapes', k('U')],
     ['Hold while drawing a shape: perfect square, circle or straight line', k('Shift')],
@@ -4949,7 +5011,9 @@ function showShortcuts(){
 /* ---------- wire up ---------- */
 $('#homeBtn').onclick=showLibrary;
 $('#blankBtn').onclick=openBlankDialog;
-$$('#toolSeg button').forEach(b=>b.onclick=()=>setTool(b.dataset.v));
+$$('#toolSeg button').forEach(b=>b.onclick=()=>setTool(b.dataset.v, true));
+$$('#eraseModeSeg button').forEach(b=>b.onclick=()=>{ setEraseMode(b.dataset.v); if(b.dataset.v==='brush') $('#erasePop').hidden=true; });
+$$('#eraseMatchSeg button').forEach(b=>b.onclick=()=>{ draw.eraseMatch=b.dataset.v; updateDrawUI(); $('#erasePop').hidden=true; });
 $$('#brushSeg button').forEach(b=>b.onclick=()=>{ draw.size=+b.dataset.v; if(draw.tool==='fill'||draw.tool==='pick') draw.tool='pen'; updateDrawUI(); renderDrawPalette(); });
 $('#mirrorBtn').onclick=cycleMirror;
 $('#dUndo').onclick=$('#dUndoM').onclick=undoDraw; $('#dRedo').onclick=$('#dRedoM').onclick=redoDraw;
@@ -5019,7 +5083,7 @@ document.addEventListener('keydown',e=>{
     if(mod && k==='y'){ e.preventDefault(); redoDraw(); return; }
     if(mod && k==='a'){ e.preventDefault(); selectAll(); return; }
     if(mod || e.altKey) return;
-    if(k==='b'||k==='p') setTool('pen'); else if(k==='e') setTool('erase'); else if(k==='g') setTool('fill'); else if(k==='i') setTool('pick');
+    if(k==='b'||k==='p') setTool('pen'); else if(k==='e'){ setEraseMode(e.shiftKey?'area':'brush'); setTool('erase'); } else if(k==='g') setTool('fill'); else if(k==='i') setTool('pick');
     else if(k==='v') setTool('select');
     else if(k==='l') { setShape('line'); $('#shapePop').hidden=true; } else if(k==='r') { setShape('rect'); $('#shapePop').hidden=true; }
     else if(k==='o') { setShape('oval'); $('#shapePop').hidden=true; } else if(k==='h') { setShape('heart'); $('#shapePop').hidden=true; }
