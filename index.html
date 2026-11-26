@@ -590,10 +590,7 @@ header.top{padding-top:calc(10px + env(safe-area-inset-top));padding-left:calc(1
         </div>
         <div class="shapepop" id="erasePop" hidden>
           <div class="seg" id="eraseModeSeg"><button data-v="brush">Brush</button><button data-v="area">Area</button></div>
-          <div id="eraseMatchWrap">
-            <div class="note" style="margin:2px 2px 6px">Area erases everything connected to where you tap that matches:</div>
-            <div class="seg" id="eraseMatchSeg"><button data-v="same">Same color</button><button data-v="similar">Similar</button><button data-v="any">Any color</button></div>
-          </div>
+          <div id="eraseMatchWrap"><div class="note" style="margin:6px 2px 0">Area removes every connected stitch of the color you tap.</div></div>
         </div>
         <div class="selbar" id="selBar" hidden>
           <button id="selDup" title="Duplicate (D)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg><span>Duplicate</span></button>
@@ -4262,7 +4259,7 @@ const ICON_EYE_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 /* ---------- draw tab ---------- */
-const draw = { tool:'pen', size:1, mx:false, my:false, eraseMode:'brush', eraseMatch:'similar', color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
+const draw = { tool:'pen', size:1, mx:false, my:false, eraseMode:'brush', color:0, undo:[], redo:[], st:null, hinted:false, shape:'rect', filled:false, sel:null, mv:null, a:null, b:null };
 const drawView = new ChartView($('#drawCanvas'), { mode:'color', progress:false, drawing:true,
   onDrawStart:drawStart, onDrawMove:(c,r)=>paintAt(c,r), onDrawDrag:drawDrag, onDrawEnd:drawEnd, onDrawCancel:cancelStroke, overlay:drawOverlay,
   drawAnywhere:()=>draw.tool==='select' || draw.tool==='shape' });
@@ -4339,16 +4336,15 @@ function drawStart(cell){
   if(draw.tool==='fill'){ const v=drawValue(); for(const i of mirrorList([cell.r*p.w+cell.c])) floodFill(i%p.w,(i/p.w)|0,v); commitStroke(); return false; }
   paintAt(cell.c,cell.r); drawView.bmpDirty=true; return true;
 }
-// Area eraser: remove the connected region around the tapped stitch (same / similar / any color)
+// Area eraser: remove the connected region of the tapped stitch's color
 function areaErase(cell){
   const p=app.p, w=p.w, h=p.h, key=i=>{ const v=p.grid[i]; return (v===EMPTY || p.palette[v].skip) ? -1 : v; };
   const starts=mirrorList([cell.r*w+cell.c]).filter(i=>key(i)>=0);
   if(!starts.length){ toast('Tap on stitches to erase that area'); return false; }
-  const labs=p.palette.map(c=>rgbToLab(...c.rgb)), mode=draw.eraseMatch, TOL=14;
   draw.st={map:new Map()}; const seen=new Uint8Array(w*h);
   for(const s0 of starts){
-    if(seen[s0]) continue; const target=key(s0), tl=labs[target];
-    const ok=i=>{ const k=key(i); if(k<0) return false; if(mode==='any') return true; if(mode==='same') return k===target; return k===target || dE(labs[k],tl)<=TOL; };
+    if(seen[s0]) continue; const target=key(s0);
+    const ok=i=>key(i)===target;
     const stack=[s0]; seen[s0]=1;
     while(stack.length){ const i=stack.pop(); setCell(i,EMPTY); const x=i%w, y=(i/w)|0;
       for(const j of [x>0?i-1:-1, x<w-1?i+1:-1, y>0?i-w:-1, y<h-1?i+w:-1]) if(j>=0 && !seen[j] && ok(j)){ seen[j]=1; stack.push(j); } }
@@ -4487,7 +4483,7 @@ function updateDrawUI(){
   $('#dUndo').disabled=$('#dUndoM').disabled=$('#mUndo').disabled=!draw.undo.length; $('#dRedo').disabled=$('#dRedoM').disabled=$('#mRedo').disabled=!draw.redo.length;
   $$('#brushSeg button').forEach(b=>b.disabled = ['fill','pick','select'].includes(draw.tool) || (draw.tool==='shape' && draw.filled && draw.shape!=='line'));
   setSeg('#shapeSeg', draw.shape); setSeg('#fillSeg', draw.filled?'filled':'outline');
-  setSeg('#eraseModeSeg', draw.eraseMode); setSeg('#eraseMatchSeg', draw.eraseMatch); $('#eraseMatchWrap').hidden = draw.eraseMode!=='area';
+  setSeg('#eraseModeSeg', draw.eraseMode); $('#eraseMatchWrap').hidden = draw.eraseMode!=='area';
   $('#eraLbl').textContent = draw.eraseMode==='area' ? 'Erase area' : 'Eraser';
   $('#eraseToolBtn .eraico').innerHTML = draw.eraseMode==='area' ? ERA_AREA_ICON : ERA_BRUSH_ICON;
   $('#eraseToolBtn').title = draw.eraseMode==='area' ? 'Erase area (Shift+E) · tap again for options' : 'Eraser (E) · tap again for Area mode';
@@ -4994,7 +4990,7 @@ function showShortcuts(){
     ['This list', k('?')],
     ['Draw'],
     ['Pen / Eraser / Fill / Pick color', k('B','E','G','I')],
-    ['Erase a whole area (like fill)', `${k('Shift')} + ${k('E')}`],
+    ['Erase all connected stitches of one color', `${k('Shift')} + ${k('E')}`],
     ['Shapes: line / rectangle / oval / heart', k('L','R','O','H')],
     ['Outline or filled shapes', k('U')],
     ['Hold while drawing a shape: perfect square, circle or straight line', k('Shift')],
@@ -5012,8 +5008,7 @@ function showShortcuts(){
 $('#homeBtn').onclick=showLibrary;
 $('#blankBtn').onclick=openBlankDialog;
 $$('#toolSeg button').forEach(b=>b.onclick=()=>setTool(b.dataset.v, true));
-$$('#eraseModeSeg button').forEach(b=>b.onclick=()=>{ setEraseMode(b.dataset.v); if(b.dataset.v==='brush') $('#erasePop').hidden=true; });
-$$('#eraseMatchSeg button').forEach(b=>b.onclick=()=>{ draw.eraseMatch=b.dataset.v; updateDrawUI(); $('#erasePop').hidden=true; });
+$$('#eraseModeSeg button').forEach(b=>b.onclick=()=>{ setEraseMode(b.dataset.v); $('#erasePop').hidden=true; });
 $$('#brushSeg button').forEach(b=>b.onclick=()=>{ draw.size=+b.dataset.v; if(draw.tool==='fill'||draw.tool==='pick') draw.tool='pen'; updateDrawUI(); renderDrawPalette(); });
 $('#mirrorBtn').onclick=cycleMirror;
 $('#dUndo').onclick=$('#dUndoM').onclick=undoDraw; $('#dRedo').onclick=$('#dRedoM').onclick=redoDraw;
