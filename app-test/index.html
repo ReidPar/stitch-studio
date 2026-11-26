@@ -401,8 +401,8 @@ header.top{padding-top:calc(10px + env(safe-area-inset-top));padding-left:calc(1
 }
 /* Opened from the Home Screen: extra room so iOS's blurred status-bar area doesn't sit on the header */
 @media (display-mode: standalone){
-  header.top{padding-top:calc(52px + env(safe-area-inset-top))}
-  .crop-top{padding-top:calc(52px + env(safe-area-inset-top))}
+  header.top{padding-top:calc(30px + env(safe-area-inset-top))}
+  .crop-top{padding-top:calc(30px + env(safe-area-inset-top))}
 }
 </style>
 </head>
@@ -3341,7 +3341,8 @@ class ChartView{
     this.c.width=Math.round(r.width*this.dpr); this.c.height=Math.round(r.height*this.dpr);
     if(this.needFit || !ow) this.fit(); else { this.ox+=(this.W-ow)/2; this.oy+=(this.H-oh)/2; this.render(); }
   }
-  fitScale(){ const pad=this.W<500?14:32; return Math.max(0.3, Math.min((this.W-pad*2)/this.p.w, (this.H-pad*2)/this.p.h)); }
+  // Leave room for the row/column numbers outside the canvas, so they only switch to an overlay when zoomed or panned
+  fitScale(){ const px=this.W<500?32:44, py=this.W<500?24:36; return Math.max(0.3, Math.min((this.W-px*2)/this.p.w, (this.H-py*2)/this.p.h)); }
   fit(){ if(!this.p||!this.W) return; this.s=this.fitScale(); this.ox=(this.W-this.p.w*this.s)/2; this.oy=(this.H-this.p.h*this.s)/2; this.needFit=false; this.draw(); }
   clampScale(s){ return Math.min(90, Math.max(this.fitScale()*0.5, s)); }
   zoomAt(x,y,f){ if(!this.p) return; const ns=this.clampScale(this.s*f); const gx=(x-this.ox)/this.s, gy=(y-this.oy)/this.s; this.s=ns; this.ox=x-gx*ns; this.oy=y-gy*ns; this.draw(); }
